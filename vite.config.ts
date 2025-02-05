@@ -18,7 +18,6 @@ export default defineConfig({
     proxy: {
       "/txn": "https://alams.gcgoptima.id",
     },
-    allowedHosts: true,
   },
   resolve: {
     alias: {
