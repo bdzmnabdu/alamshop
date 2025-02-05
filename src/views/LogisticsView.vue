@@ -1,0 +1,1040 @@
+<script setup lang="ts">
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { cn } from "@/lib/utils";
+import { Check, ChevronsUpDown } from "lucide-vue-next";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Switch } from "@/components/ui/switch";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { computed, reactive, ref, watch } from "vue";
+import useHSCode from "@/composables/useHSCode";
+import useCities from "@/composables/useCities";
+import { postQuoLog } from "@/api";
+import { useRouter } from "vue-router";
+import useSkaCoo from "@/composables/useSkaCoo";
+import { TokenService } from "@/services/TokenService";
+
+const router = useRouter();
+
+const token = TokenService.getToken();
+if (!token && !TokenService.verifyToken(token as string)) {
+  router.push("/");
+}
+
+const removeToken = () => {
+  TokenService.removeToken();
+};
+
+interface FormLogistik {
+  formId?: string;
+  jenisTransportasi: string;
+  ekspedisi: string;
+  category: string;
+  incoterm: string;
+  komoditi?: string;
+  hscode?: string;
+  weight: number;
+  jmlKemasan: number;
+  pengirim: string;
+  nohppengirim: string;
+  ktpnpwpPengirim: string;
+  alamatPengirim: string;
+  negaraAsalPengirim: string;
+  legalitasPT?: string | File;
+  namaEksportir: string;
+  alamatEksportir: string;
+  ktpnpwpEksportir: string;
+  negaraAsalEksportir: string;
+  namaPenerima: string;
+  alamatPenerima: string;
+  negaraAsalPenerima: string;
+  skacoo?: string;
+  namaImportir: string;
+  alamatImportir: string;
+  negaraAsalImportir: string;
+  insurance: string;
+}
+
+const form = reactive<{
+  dataLogistik: FormLogistik;
+}>({
+  dataLogistik: {
+    formId: "log",
+    jenisTransportasi: "",
+    ekspedisi: "",
+    category: "",
+    incoterm: "",
+    komoditi: "",
+    hscode: "",
+    weight: 0,
+    jmlKemasan: 0,
+    pengirim: "",
+    nohppengirim: "",
+    ktpnpwpPengirim: "",
+    alamatPengirim: "",
+    negaraAsalPengirim: "",
+    legalitasPT: undefined,
+    namaEksportir: "",
+    alamatEksportir: "",
+    ktpnpwpEksportir: "",
+    negaraAsalEksportir: "",
+    namaPenerima: "",
+    alamatPenerima: "",
+    negaraAsalPenerima: "",
+    skacoo: "",
+    namaImportir: "",
+    alamatImportir: "",
+    negaraAsalImportir: "",
+    insurance: "false",
+  },
+});
+const isCheckedEksportir = ref(false);
+const isCheckedImportir = ref(false);
+
+const srcVal = ref("");
+const { isLoading, hscodes, refetch } = useHSCode(srcVal);
+const { cities } = useCities();
+const { govreg } = useSkaCoo();
+// console.log(cities);
+
+const searcHSC = (event: any) => {
+  srcVal.value = event.target.value;
+  console.log("Search Query:", srcVal.value);
+};
+
+const handleChangeEksp = () => {
+  isCheckedEksportir.value = !isCheckedEksportir.value;
+};
+const handleChangeImpr = () => {
+  isCheckedImportir.value = !isCheckedImportir.value;
+};
+
+const namaEksportirLogVal = computed({
+  get: () =>
+    isCheckedEksportir.value == true ? form.dataLogistik.pengirim : "",
+  set: (val) => (form.dataLogistik.namaEksportir = val),
+});
+
+watch(
+  [() => form.dataLogistik.hscode, srcVal],
+  (newValues, oldValues) => {
+    const [newFormHSC, newSrcVal] = newValues;
+    const [oldFormHSC, oldSrcVal] = oldValues;
+
+    if (newFormHSC === "" && oldFormHSC !== "") {
+      srcVal.value = "";
+      refetch();
+    }
+
+    if (newSrcVal !== oldSrcVal) {
+      refetch();
+    }
+  },
+  { immediate: false, deep: true }
+);
+
+watch(
+  [() => isCheckedEksportir.value, () => isCheckedImportir.value],
+  ([newCheckedEks, newCheckedImpr]) => {
+    form.dataLogistik.namaEksportir = newCheckedEks
+      ? form.dataLogistik.pengirim
+      : "";
+    form.dataLogistik.ktpnpwpEksportir = newCheckedEks
+      ? form.dataLogistik.ktpnpwpPengirim
+      : "";
+    form.dataLogistik.alamatEksportir = newCheckedEks
+      ? form.dataLogistik.alamatPengirim
+      : "";
+    form.dataLogistik.negaraAsalEksportir = newCheckedEks
+      ? form.dataLogistik.negaraAsalPengirim
+      : "";
+    form.dataLogistik.namaImportir = newCheckedImpr
+      ? form.dataLogistik.namaPenerima
+      : "";
+    form.dataLogistik.alamatImportir = newCheckedImpr
+      ? form.dataLogistik.alamatPenerima
+      : "";
+    form.dataLogistik.negaraAsalImportir = newCheckedImpr
+      ? form.dataLogistik.negaraAsalPenerima
+      : "";
+  },
+  { immediate: true }
+);
+
+const onSubmit = async () => {
+  const fileInput = document.getElementById(
+    "certificate-cl"
+  ) as HTMLInputElement | null;
+
+  const dataLog: FormLogistik = {
+    formId: form.dataLogistik.formId,
+    jenisTransportasi: form.dataLogistik.jenisTransportasi,
+    ekspedisi: form.dataLogistik.ekspedisi,
+    category: form.dataLogistik.category,
+    incoterm: form.dataLogistik.incoterm,
+    komoditi: form.dataLogistik.komoditi,
+    hscode: form.dataLogistik.hscode,
+    weight: form.dataLogistik.weight,
+    jmlKemasan: form.dataLogistik.jmlKemasan,
+    pengirim: form.dataLogistik.pengirim,
+    nohppengirim: form.dataLogistik.nohppengirim,
+    ktpnpwpPengirim: form.dataLogistik.ktpnpwpPengirim,
+    alamatPengirim: form.dataLogistik.alamatPengirim,
+    negaraAsalPengirim: form.dataLogistik.negaraAsalPengirim,
+    legalitasPT: fileInput?.files?.[0],
+    namaEksportir: form.dataLogistik.namaEksportir,
+    alamatEksportir: form.dataLogistik.alamatEksportir,
+    ktpnpwpEksportir: form.dataLogistik.ktpnpwpEksportir,
+    negaraAsalEksportir: form.dataLogistik.negaraAsalEksportir,
+    namaPenerima: form.dataLogistik.namaPenerima,
+    alamatPenerima: form.dataLogistik.alamatPenerima,
+    negaraAsalPenerima: form.dataLogistik.negaraAsalPenerima,
+    skacoo: form.dataLogistik.skacoo,
+    namaImportir: form.dataLogistik.namaImportir,
+    alamatImportir: form.dataLogistik.alamatImportir,
+    negaraAsalImportir: form.dataLogistik.negaraAsalImportir,
+    insurance: form.dataLogistik.insurance,
+  };
+  const formDataLog = {
+    ...dataLog,
+  };
+
+  console.log(formDataLog);
+  try {
+    const response = await postQuoLog(formDataLog);
+    console.log("Success:", response);
+    if (response.status === 200) {
+      router.push("/checkout/success");
+      const phoneNumber = "628983224705"; // Nomor tujuan WhatsApp
+      const message = [
+        `Halo, saya ${formDataLog.pengirim}.`,
+        "",
+        `Transportation Type: ${formDataLog.jenisTransportasi}`,
+        `Expedition Service: ${formDataLog.ekspedisi}`,
+        `Shipping Scope: ${formDataLog.category}`,
+        `Incoterm: ${formDataLog.incoterm}`,
+        `Commodity: ${formDataLog.komoditi}`,
+        `HS Code: ${formDataLog.hscode}`,
+        `Weight: ${formDataLog.weight}`,
+        `Total Packages: ${formDataLog.jmlKemasan}`,
+        `Sender: ${formDataLog.pengirim}`,
+        `No Hp/Telp: ${formDataLog.nohppengirim}`,
+        `KTP/NPWP: ${formDataLog.ktpnpwpPengirim}`,
+        `Origin City: ${formDataLog.alamatPengirim}`,
+        `Origin Country: ${formDataLog.negaraAsalPengirim}`,
+        `Company Legality Certificate: ${fileInput?.files?.[0].name}`,
+        `Exporter Name : ${formDataLog.namaEksportir}`,
+        `KTP/NPWP: ${formDataLog.ktpnpwpEksportir}`,
+        `Origin City: ${formDataLog.alamatEksportir}`,
+        `Origin Country: ${formDataLog.negaraAsalEksportir}`,
+        `Recipient : ${formDataLog.namaPenerima}`,
+        `Destination City: ${formDataLog.alamatPenerima}`,
+        `Destination Country: ${formDataLog.negaraAsalPenerima}`,
+        `SKA/COO: ${formDataLog.skacoo}`,
+        `Importer Name: ${formDataLog.namaImportir}`,
+        `Importer's City : ${formDataLog.alamatImportir}`,
+        `Importer's Country : ${formDataLog.negaraAsalImportir}`,
+        `Insurance: ${formDataLog.insurance}`,
+      ].join("\n");
+      const waUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
+        message
+      )}`;
+      // Redirect ke WhatsApp
+      window.open(waUrl, "_blank");
+    }
+    removeToken();
+  } catch (error) {
+    throw error;
+  }
+};
+</script>
+<template>
+  <section class="w-full px-2 md:px-32 mb-9 flex-1">
+    <div class="md:flex justify-center">
+      <div class="justify-center relative md:w-3/4 m-0">
+        <div class="w-full">
+          <RouterLink
+            :to="{ path: '/' }"
+            class="flex items-center gap-3 cursor-pointer my-5 w-fit"
+          >
+            <span class="pi pi-arrow-left text-xs"></span>
+            <p class="text-sm hover:underline">Back</p>
+          </RouterLink>
+        </div>
+        <div id="form" class="bg-slate-50 w-full p-5 md:p-10 rounded-md mb-4">
+          <div id="form-hd">
+            <h1
+              class="text-lg font-semibold border-b-4 border-slate-800 w-fit mb-5"
+            >
+              Form Logistics
+            </h1>
+            <p class="text-base text-slate-600">Form Alams Logistik</p>
+          </div>
+          <div id="form-dt" class="mt-5">
+            <form @submit.prevent="onSubmit" class="flex flex-col gap-5">
+              <div id="form-logistik" class="flex flex-col gap-5">
+                <div id="jenis-transportasi">
+                  <label class="text-sm font-normal text-slate-700 mb-1"
+                    >Transportation Type
+                    <span class="text-red-500 font-semibold">*</span></label
+                  >
+                  <Select
+                    v-model="form.dataLogistik.jenisTransportasi"
+                    required
+                  >
+                    <SelectTrigger class="w-full h-9">
+                      <SelectValue placeholder="Select transportation type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectItem value="air">Air</SelectItem>
+                        <SelectItem value="sea">Sea </SelectItem>
+                        <SelectItem value="land">Land </SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div id="ekspedisi">
+                  <label class="text-sm font-normal text-slate-700 mb-1"
+                    >Expedition Service
+                    <span class="text-red-500 font-semibold">*</span></label
+                  >
+                  <Select v-model="form.dataLogistik.ekspedisi" required>
+                    <SelectTrigger class="w-full h-9">
+                      <SelectValue placeholder="Select expedition service" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectItem value="DOOR TO DOOR"
+                          >DOOR TO DOOR</SelectItem
+                        >
+                        <SelectItem value="DOOR TO PORT"
+                          >DOOR TO PORT</SelectItem
+                        >
+                        <SelectItem value="PORT TO DOOR"
+                          >PORT TO DOOR</SelectItem
+                        >
+                        <SelectItem value="PORT TO PORT"
+                          >PORT TO PORT</SelectItem
+                        >
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div id="cat-transportasi">
+                  <label class="text-sm font-normal text-slate-700 mb-1"
+                    >Shipping Scope
+                    <span class="text-red-500 font-semibold">*</span></label
+                  >
+                  <Select v-model="form.dataLogistik.category" required>
+                    <SelectTrigger class="w-full h-9">
+                      <SelectValue placeholder="e.g. Domestic" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectItem value="domestic">Domestic </SelectItem>
+                        <SelectItem value="international"
+                          >International
+                        </SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div id="incoterm">
+                  <label class="text-sm font-normal text-slate-700 mb-1"
+                    >Incoterm
+                    <span class="text-red-500 font-semibold">*</span></label
+                  >
+                  <Select v-model="form.dataLogistik.incoterm" required>
+                    <SelectTrigger class="w-full h-9">
+                      <SelectValue
+                        placeholder="e.g. CIF (Cost, Insurance, and Freight)"
+                      />
+                    </SelectTrigger>
+                    <SelectContent class="w-fit">
+                      <SelectGroup>
+                        <ScrollArea>
+                          <SelectItem value="fob"
+                            >FOB (Free on Board)
+                          </SelectItem>
+                          <SelectItem value="cif"
+                            >CIF (Cost, Insurance, and Freight)
+                          </SelectItem>
+                        </ScrollArea>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div class="flex flex-col">
+                  <label class="text-sm font-normal text-slate-700 mb-1"
+                    >Commodity
+                    <span class="text-red-500 font-semibold">*</span></label
+                  >
+                  <Input
+                    v-model="form.dataLogistik.komoditi"
+                    type="text"
+                    placeholder="e.g. Salmon Fish"
+                    required
+                  />
+                </div>
+                <div class="flex flex-col">
+                  <label class="text-sm font-normal text-slate-700 mb-1"
+                    >HS Code
+                  </label>
+                  <Popover>
+                    <PopoverTrigger as-child>
+                      <div class="relative">
+                        <Input
+                          type="text"
+                          placeholder="e.g. 129003849"
+                          role="combobox"
+                          :class="cn('justify-between h-9')"
+                          v-model="form.dataLogistik.hscode"
+                          required
+                        />
+                        <ChevronsUpDown
+                          class="ml-2 h-4 w-4 shrink-0 opacity-50 absolute right-2 top-2.5"
+                        />
+                      </div>
+                    </PopoverTrigger>
+                    <PopoverContent class="w-[200px] p-0" align="start">
+                      <Command>
+                        <CommandInput
+                          placeholder="Search HS Code..."
+                          @input="searcHSC"
+                        />
+                        <p
+                          v-if="isLoading && hscodes"
+                          class="m-5 text-sm text-slate-600 font-medium"
+                        >
+                          Search for hscode..
+                        </p>
+                        <CommandEmpty v-if="!isLoading"
+                          >Nothing found.</CommandEmpty
+                        >
+                        <CommandList v-if="!isLoading && hscodes">
+                          <CommandGroup>
+                            <ScrollArea class="h-40">
+                              <CommandItem
+                                v-for="(hsc, index) in hscodes"
+                                :key="index"
+                                :value="hsc.code"
+                                @select="
+                                  () => (form.dataLogistik.hscode = hsc.code)
+                                "
+                              >
+                                <Check
+                                  :class="
+                                    cn(
+                                      'mr-2 h-4 w-4',
+                                      hsc.code === form.dataLogistik.hscode
+                                        ? 'opacity-100'
+                                        : 'opacity-0'
+                                    )
+                                  "
+                                />
+                                {{ hsc.code }}
+                              </CommandItem>
+                            </ScrollArea>
+                          </CommandGroup>
+                        </CommandList>
+                      </Command>
+                    </PopoverContent>
+                  </Popover>
+                </div>
+                <div class="flex flex-col">
+                  <label class="text-sm font-normal text-slate-700 mb-1">
+                    HS Code Description
+                    <span class="text-xs font-normal"
+                      >(Automatically filled)</span
+                    >
+                  </label>
+                  <Input
+                    type="text"
+                    placeholder="e.g. Kuda, keledai, bagal dan hinnie,- - Bibit"
+                    :value="form.dataLogistik.hscode ? hscodes.find((hsc: any) => hsc.code === form.dataLogistik.hscode)?.descriptionlc : ''"
+                    disabled
+                  />
+                </div>
+                <div class="flex flex-col">
+                  <label class="text-sm font-normal text-slate-700 mb-1"
+                    >Weight
+                    <span class="text-red-500 font-semibold">*</span></label
+                  >
+                  <Input
+                    v-model="form.dataLogistik.weight"
+                    type="number"
+                    placeholder="e.g. 100"
+                    required
+                  />
+                </div>
+                <div class="flex flex-col">
+                  <label class="text-sm font-normal text-slate-700 mb-1"
+                    >Total Packages
+                    <span class="text-red-500 font-semibold">*</span></label
+                  >
+                  <Input
+                    v-model="form.dataLogistik.jmlKemasan"
+                    type="number"
+                    placeholder="e.g. 10"
+                    required
+                  />
+                </div>
+                <div class="flex flex-col">
+                  <label class="text-sm font-normal text-slate-700 mb-1"
+                    >Sender Name
+                    <span class="text-red-500 font-semibold">*</span></label
+                  >
+                  <Input
+                    v-model="form.dataLogistik.pengirim"
+                    type="text"
+                    placeholder="e.g. Sender Name"
+                    required
+                  />
+                </div>
+                <div class="flex flex-col">
+                  <label class="text-sm font-normal text-slate-700 mb-1"
+                    >No. Handphone/Telp
+                    <span class="text-red-500 font-semibold">*</span></label
+                  >
+                  <Input
+                    v-model="form.dataLogistik.nohppengirim"
+                    type="text"
+                    placeholder="e.g. 0123456789"
+                    required
+                  />
+                </div>
+                <div class="flex flex-col">
+                  <label class="text-sm font-normal text-slate-700 mb-1"
+                    >KTP / NPWP
+                    <span class="text-red-500 font-semibold">*</span></label
+                  >
+                  <Input
+                    v-model="form.dataLogistik.ktpnpwpPengirim"
+                    type="text"
+                    placeholder="e.g. 3216060123456788"
+                    required
+                  />
+                </div>
+                <div class="grid md:grid-cols-2 gap-2">
+                  <div class="flex flex-col">
+                    <label class="text-sm font-normal text-slate-700 mb-1"
+                      >Origin City
+                      <span class="text-red-500 font-semibold">*</span></label
+                    >
+                    <Popover>
+                      <PopoverTrigger as-child>
+                        <div class="relative">
+                          <Input
+                            type="text"
+                            placeholder="e.g. Jakarta - Halim Perdana Kusuma - HLP"
+                            role="combobox"
+                            :class="cn('justify-between')"
+                            :value="form.dataLogistik.alamatPengirim ? cities.find((cty: any) => cty.city === form.dataLogistik.alamatPengirim)?.city: 'Select City...'"
+                            required
+                          />
+                          <ChevronsUpDown
+                            class="ml-2 h-4 w-4 shrink-0 opacity-50 absolute right-2 top-2.5"
+                          />
+                        </div>
+                      </PopoverTrigger>
+                      <PopoverContent
+                        class="w-[300px] md:w-[400px] p-0"
+                        align="start"
+                      >
+                        <Command>
+                          <CommandInput placeholder="Search City..." />
+                          <CommandEmpty>Nothing found.</CommandEmpty>
+                          <CommandList>
+                            <CommandGroup>
+                              <ScrollArea class="h-40">
+                                <CommandItem
+                                  v-for="(cty, index) in cities"
+                                  :key="index"
+                                  :value="cty.city"
+                                  @select="
+                                    () => {
+                                      form.dataLogistik.alamatPengirim =
+                                        cty.city;
+                                      form.dataLogistik.negaraAsalPengirim =
+                                        cty.country_name;
+                                    }
+                                  "
+                                >
+                                  <Check
+                                    :class="
+                                      cn(
+                                        'mr-2 h-4 w-4',
+                                        cty.city ===
+                                          form.dataLogistik.alamatPengirim
+                                          ? 'opacity-100'
+                                          : 'opacity-0'
+                                      )
+                                    "
+                                  />
+                                  {{ cty.city }}
+                                </CommandItem>
+                              </ScrollArea>
+                            </CommandGroup>
+                          </CommandList>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+                  <div id="countryFrom" class="flex flex-col">
+                    <label class="text-sm font-normal text-slate-700 mb-1"
+                      >Origin Country
+                      <span class="text-red-500 font-semibold">*</span></label
+                    >
+                    <Input
+                      name="countryFrom"
+                      type="text"
+                      placeholder="e.g. Indonesia"
+                      :value="form.dataLogistik.alamatPengirim ? cities.find((c: any) => c.city === form.dataLogistik.alamatPengirim)?.country_name : undefined"
+                      disabled
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label class="text-sm font-normal text-slate-700 mb-1"
+                    >Company Legality Certificate (NPWP/NIB)
+                    <span class="text-red-500 font-semibold">*</span>
+                  </label>
+                  <Input
+                    type="file"
+                    id="certificate-cl"
+                    name="certificate-cl"
+                  />
+                  <p class="text-xs text-slate-700 mt-1">
+                    *File format in JPG, JPEG, or PDF
+                  </p>
+                </div>
+                <div
+                  class="flex flex-row items-center justify-between rounded-lg border p-4"
+                >
+                  <div class="space-y-0.5">
+                    <label class="text-base"> Exporter Data </label>
+                    <p class="text-xs text-slate-700">
+                      Is Exporter Data the same as Shipper Data?
+                    </p>
+                  </div>
+                  <div class="flex flex-col items-end">
+                    <Switch @update:checked="handleChangeEksp()" />
+                    <p v-if="isCheckedEksportir">Yes</p>
+                    <p v-else>No</p>
+                  </div>
+                </div>
+                <div class="flex flex-col">
+                  <label class="text-sm font-normal text-slate-700 mb-1"
+                    >Exporter Name
+                    <span class="text-red-500 font-semibold">*</span></label
+                  >
+                  <Input
+                    v-model="namaEksportirLogVal"
+                    type="text"
+                    placeholder="e.g. Exporter Name"
+                    required
+                  />
+                </div>
+                <div class="flex flex-col">
+                  <label class="text-sm font-normal text-slate-700 mb-1"
+                    >KTP / NPWP
+                    <span class="text-red-500 font-semibold">*</span></label
+                  >
+                  <Input
+                    v-model="form.dataLogistik.ktpnpwpEksportir"
+                    type="text"
+                    placeholder="e.g. 3216060123456788"
+                    required
+                  />
+                </div>
+                <div class="grid md:grid-cols-2 gap-2">
+                  <div class="flex flex-col">
+                    <label class="text-sm font-normal text-slate-700 mb-1"
+                      >Exporter’s Origin City
+                      <span class="text-red-500 font-semibold">*</span></label
+                    >
+                    <Popover>
+                      <PopoverTrigger as-child>
+                        <div class="relative">
+                          <Input
+                            type="text"
+                            placeholder="e.g. Jakarta - Halim Perdana Kusuma - HLP"
+                            role="combobox"
+                            :class="cn('justify-between')"
+                            :value="form.dataLogistik.alamatEksportir ? cities.find((cty: any) => cty.city === form.dataLogistik.alamatEksportir)?.city: 'Select City...'"
+                            required
+                          />
+                          <ChevronsUpDown
+                            class="ml-2 h-4 w-4 shrink-0 opacity-50 absolute right-2 top-2.5"
+                          />
+                        </div>
+                      </PopoverTrigger>
+                      <PopoverContent
+                        class="w-[300px] md:w-[400px] p-0"
+                        align="start"
+                      >
+                        <Command>
+                          <CommandInput placeholder="Search City..." />
+                          <CommandEmpty>Nothing found.</CommandEmpty>
+                          <CommandList>
+                            <CommandGroup>
+                              <ScrollArea class="h-40">
+                                <CommandItem
+                                  v-for="(cty, index) in cities"
+                                  :key="index"
+                                  :value="cty.city"
+                                  @select="
+                                    () => {
+                                      form.dataLogistik.alamatEksportir =
+                                        cty.city;
+                                      form.dataLogistik.negaraAsalEksportir =
+                                        cty.country_name;
+                                    }
+                                  "
+                                >
+                                  <Check
+                                    :class="
+                                      cn(
+                                        'mr-2 h-4 w-4',
+                                        cty.city ===
+                                          form.dataLogistik.alamatEksportir
+                                          ? 'opacity-100'
+                                          : 'opacity-0'
+                                      )
+                                    "
+                                  />
+                                  {{ cty.city }}
+                                </CommandItem>
+                              </ScrollArea>
+                            </CommandGroup>
+                          </CommandList>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+                  <div id="countryFrom" class="flex flex-col">
+                    <label class="text-sm font-normal text-slate-700 mb-1"
+                      >Exporter’s Origin Country
+                      <span class="text-red-500 font-semibold">*</span></label
+                    >
+                    <Input
+                      name="countryFrom"
+                      type="text"
+                      placeholder="e.g. Indonesia"
+                      :value="form.dataLogistik.alamatEksportir ? cities.find((c: any) => c.city == form.dataLogistik.alamatEksportir)?.country_name : undefined"
+                      disabled
+                    />
+                  </div>
+                </div>
+                <div id="penerima" class="flex flex-col">
+                  <label class="text-sm font-normal text-slate-700 mb-1"
+                    >Recipient Name
+                    <span class="text-red-500 font-semibold">*</span></label
+                  >
+                  <Input
+                    type="text"
+                    placeholder="e.g. Nama Penerima"
+                    v-model="form.dataLogistik.namaPenerima"
+                    required
+                  />
+                </div>
+                <div class="grid md:grid-cols-2 gap-2">
+                  <div id="cityTo" class="flex flex-col">
+                    <label class="text-sm font-normal text-slate-700 mb-1"
+                      >Destination City
+                      <span class="text-red-500 font-semibold">*</span></label
+                    >
+                    <Popover>
+                      <PopoverTrigger as-child>
+                        <div class="relative">
+                          <Input
+                            type="text"
+                            placeholder="e.g. Brisbane - BNE"
+                            role="combobox"
+                            :class="cn('justify-between')"
+                            :value="form.dataLogistik.alamatPenerima ? cities.find((cty: any) => cty.city === form.dataLogistik.alamatPenerima)?.city: 'Select City...'"
+                            required
+                          />
+                          <ChevronsUpDown
+                            class="ml-2 h-4 w-4 shrink-0 opacity-50 absolute right-2 top-2.5"
+                          />
+                        </div>
+                      </PopoverTrigger>
+                      <PopoverContent
+                        class="w-[300px] md:w-[400px] p-0"
+                        align="start"
+                      >
+                        <Command>
+                          <CommandInput placeholder="Search City..." />
+                          <CommandEmpty>Nothing found.</CommandEmpty>
+                          <CommandList>
+                            <CommandGroup>
+                              <ScrollArea class="h-40">
+                                <CommandItem
+                                  v-for="(cty, index) in cities"
+                                  :key="index"
+                                  :value="cty.city"
+                                  @select="
+                                    () => {
+                                      form.dataLogistik.alamatPenerima =
+                                        cty.city;
+                                      form.dataLogistik.negaraAsalPenerima =
+                                        cty.country_name;
+                                    }
+                                  "
+                                >
+                                  <Check
+                                    :class="
+                                      cn(
+                                        'mr-2 h-4 w-4',
+                                        cty.city ===
+                                          form.dataLogistik.alamatPenerima
+                                          ? 'opacity-100'
+                                          : 'opacity-0'
+                                      )
+                                    "
+                                  />
+                                  {{ cty.city }}
+                                </CommandItem>
+                              </ScrollArea>
+                            </CommandGroup>
+                          </CommandList>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+                  <div id="countryTo">
+                    <div class="flex flex-col">
+                      <label class="text-sm font-normal text-slate-700 mb-1"
+                        >Destination Country
+                        <span class="text-red-500 font-semibold">*</span></label
+                      >
+                      <Input
+                        name="countryTo"
+                        type="text"
+                        placeholder="e.g. Australia"
+                        :value="form.dataLogistik.alamatPenerima ? cities.find((c: any) => c.city == form.dataLogistik.alamatPenerima)?.country_name : undefined"
+                        disabled
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div id="skacoo" class="flex flex-col">
+                  <label class="text-sm font-normal text-slate-700 mb-1"
+                    >SKA/COO
+                    <span class="text-red-500 font-semibold">*</span></label
+                  >
+                  <Popover>
+                    <PopoverTrigger as-child>
+                      <div class="relative">
+                        <Input
+                          type="text"
+                          placeholder="e.g. FORM A (FOR GENERAL PRODUCT), FORM HANDICRAFT (FOR HAND MADE PRODUCT)"
+                          role="combobox"
+                          :class="cn('justify-between')"
+                          :value="form.dataLogistik.skacoo ? govreg.find((gvr: any) => gvr.govreg === form.dataLogistik.skacoo)?.govreg: 'Select SKA/COO...'"
+                          required
+                        />
+                        <ChevronsUpDown
+                          class="ml-2 h-4 w-4 shrink-0 opacity-50 absolute right-2 top-2.5"
+                        />
+                      </div>
+                    </PopoverTrigger>
+                    <PopoverContent
+                      class="w-[330px] md:w-[500px] p-0"
+                      align="start"
+                    >
+                      <Command>
+                        <CommandInput placeholder="Search City..." />
+                        <CommandEmpty>Nothing found.</CommandEmpty>
+                        <CommandList>
+                          <CommandGroup>
+                            <ScrollArea class="h-40">
+                              <CommandItem
+                                v-for="(gvr, index) in govreg"
+                                :key="index"
+                                :value="gvr.govreg"
+                                @select="
+                                  () => {
+                                    form.dataLogistik.skacoo = gvr.govreg;
+                                  }
+                                "
+                              >
+                                <Check
+                                  :class="
+                                    cn(
+                                      'mr-2 h-4 w-4',
+                                      gvr.govreg === form.dataLogistik.skacoo
+                                        ? 'opacity-100'
+                                        : 'opacity-0'
+                                    )
+                                  "
+                                />
+                                {{ gvr.govreg }}
+                              </CommandItem>
+                            </ScrollArea>
+                          </CommandGroup>
+                        </CommandList>
+                      </Command>
+                    </PopoverContent>
+                  </Popover>
+                </div>
+                <div
+                  class="flex flex-row items-center justify-between rounded-lg border p-4"
+                >
+                  <div class="space-y-0.5">
+                    <label class="text-base">Importer Data </label>
+                    <p class="text-xs text-slate-700">
+                      Is Importer Data the same as Recipient Data?
+                    </p>
+                  </div>
+                  <div class="flex flex-col items-end">
+                    <Switch @update:checked="handleChangeImpr" />
+                    <p v-if="isCheckedImportir">Yes</p>
+                    <p v-else>No</p>
+                  </div>
+                </div>
+                <div id="penerima" class="flex flex-col">
+                  <label class="text-sm font-normal text-slate-700 mb-1"
+                    >Importer Name
+                    <span class="text-red-500 font-semibold">*</span></label
+                  >
+                  <Input
+                    type="text"
+                    placeholder="e.g. Nama Penerima"
+                    v-model="form.dataLogistik.namaImportir"
+                    required
+                  />
+                </div>
+                <div class="grid md:grid-cols-2 gap-2">
+                  <div id="cityTo" class="flex flex-col">
+                    <label class="text-sm font-normal text-slate-700 mb-1"
+                      >Importer's City
+                      <span class="text-red-500 font-semibold">*</span></label
+                    >
+                    <Popover>
+                      <PopoverTrigger as-child>
+                        <div class="relative">
+                          <Input
+                            type="text"
+                            placeholder="e.g. Brisbane - BNE"
+                            role="combobox"
+                            :class="cn('justify-between')"
+                            :value="form.dataLogistik.alamatImportir ? cities.find((cty: any) => cty.city === form.dataLogistik.alamatImportir)?.city: 'Select City...'"
+                            required
+                          />
+                          <ChevronsUpDown
+                            class="ml-2 h-4 w-4 shrink-0 opacity-50 absolute right-2 top-2.5"
+                          />
+                        </div>
+                      </PopoverTrigger>
+                      <PopoverContent
+                        class="w-[300px] md:w-[400px] p-0"
+                        align="start"
+                      >
+                        <Command>
+                          <CommandInput placeholder="Search City..." />
+                          <CommandEmpty>Nothing found.</CommandEmpty>
+                          <CommandList>
+                            <CommandGroup>
+                              <ScrollArea class="h-40">
+                                <CommandItem
+                                  v-for="(cty, index) in cities"
+                                  :key="index"
+                                  :value="cty.city"
+                                  @select="
+                                    () => {
+                                      form.dataLogistik.alamatImportir =
+                                        cty.city;
+                                      form.dataLogistik.negaraAsalImportir =
+                                        cty.country_name;
+                                    }
+                                  "
+                                >
+                                  <Check
+                                    :class="
+                                      cn(
+                                        'mr-2 h-4 w-4',
+                                        cty.city ===
+                                          form.dataLogistik.alamatImportir
+                                          ? 'opacity-100'
+                                          : 'opacity-0'
+                                      )
+                                    "
+                                  />
+                                  {{ cty.city }}
+                                </CommandItem>
+                              </ScrollArea>
+                            </CommandGroup>
+                          </CommandList>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+                  <div id="countryTo">
+                    <div class="flex flex-col">
+                      <label class="text-sm font-normal text-slate-700 mb-1"
+                        >Importer' Country
+                        <span class="text-red-500 font-semibold">*</span></label
+                      >
+                      <Input
+                        name="countryTo"
+                        type="text"
+                        placeholder="e.g. Australia"
+                        :value="form.dataLogistik.alamatImportir ? cities.find((c: any) => c.city == form.dataLogistik.alamatImportir)?.country_name : undefined"
+                        disabled
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div id="insurance" class="flex flex-col">
+                  <label class="text-sm font-normal text-slate-700 mb-1"
+                    >Insurance?
+                    <span class="text-red-500 font-semibold">*</span></label
+                  >
+                  <RadioGroup
+                    default-value="option-one"
+                    v-model="form.dataLogistik.insurance"
+                    required
+                  >
+                    <div class="flex items-center space-x-2">
+                      <RadioGroupItem id="option-one" value="true" />
+                      <label for="option-one" class="text-sm">Yes</label>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                      <RadioGroupItem id="option-two" value="false" />
+                      <label for="option-two" class="text-sm">No</label>
+                    </div>
+                  </RadioGroup>
+                </div>
+              </div>
+              <Button type="submit"> Submit </Button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</template>
