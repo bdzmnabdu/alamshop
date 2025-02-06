@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import ProductCard from "@/components/common/ProductCard.vue";
 import ProductCardLoad from "@/components/common/ProductCardLoad.vue";
 import useProducts from "@/composables/useProducts";
@@ -40,12 +40,16 @@ const { isLoading, isError, products } = useProducts(
 const cols = computed(() =>
   catId.value ? "md:grid-cols-4" : "md:grid-cols-5"
 );
-console.log(cols.value);
+// console.log(cols.value);
 
 const currentPageFn = (page: number) => {
   currentPage.value = page;
-  console.log(currentPage.value);
+  // console.log(currentPage.value);
 };
+const updatePage = () => {
+  currentPageFn(1);
+};
+watch([catId, waterType], updatePage, { deep: true });
 </script>
 <template>
   <div v-if="products && products?.itemsprd.length > 0">
