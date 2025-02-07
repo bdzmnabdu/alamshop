@@ -116,7 +116,6 @@ const srcVal = ref("");
 const { isLoading, hscodes, refetch } = useHSCode(srcVal);
 const { cities } = useCities();
 const { govreg } = useSkaCoo();
-// console.log(cities);
 
 const searcHSC = (event: any) => {
   srcVal.value = event.target.value;
@@ -276,10 +275,10 @@ const onSubmit = async () => {
         <div class="w-full">
           <RouterLink
             :to="{ path: '/' }"
-            class="flex items-center gap-3 cursor-pointer my-5 w-fit"
+            class="flex items-center gap-3 cursor-pointer my-5 w-fit bg-orange-100 py-2 px-3 rounded-xl"
           >
-            <span class="pi pi-arrow-left text-xs"></span>
-            <p class="text-sm hover:underline">Back</p>
+            <span class="pi pi-arrow-left text-xs text-orange-900"></span>
+            <p class="text-sm hover:underline text-orange-900">Back</p>
           </RouterLink>
         </div>
         <div id="form" class="bg-slate-50 w-full p-5 md:p-10 rounded-md mb-4">
@@ -303,7 +302,7 @@ const onSubmit = async () => {
                     v-model="form.dataLogistik.jenisTransportasi"
                     required
                   >
-                    <SelectTrigger class="w-full h-9">
+                    <SelectTrigger class="w-full">
                       <SelectValue placeholder="Select transportation type" />
                     </SelectTrigger>
                     <SelectContent>
@@ -321,7 +320,7 @@ const onSubmit = async () => {
                     <span class="text-red-500 font-semibold">*</span></label
                   >
                   <Select v-model="form.dataLogistik.ekspedisi" required>
-                    <SelectTrigger class="w-full h-9">
+                    <SelectTrigger class="w-full">
                       <SelectValue placeholder="Select expedition service" />
                     </SelectTrigger>
                     <SelectContent>
@@ -348,7 +347,7 @@ const onSubmit = async () => {
                     <span class="text-red-500 font-semibold">*</span></label
                   >
                   <Select v-model="form.dataLogistik.category" required>
-                    <SelectTrigger class="w-full h-9">
+                    <SelectTrigger class="w-full">
                       <SelectValue placeholder="e.g. Domestic" />
                     </SelectTrigger>
                     <SelectContent>
@@ -367,7 +366,7 @@ const onSubmit = async () => {
                     <span class="text-red-500 font-semibold">*</span></label
                   >
                   <Select v-model="form.dataLogistik.incoterm" required>
-                    <SelectTrigger class="w-full h-9">
+                    <SelectTrigger class="w-full">
                       <SelectValue
                         placeholder="e.g. CIF (Cost, Insurance, and Freight)"
                       />
@@ -404,17 +403,17 @@ const onSubmit = async () => {
                   </label>
                   <Popover>
                     <PopoverTrigger as-child>
-                      <div class="relative">
+                      <div class="relative flex justify-center items-center">
                         <Input
                           type="text"
                           placeholder="e.g. 129003849"
                           role="combobox"
-                          :class="cn('justify-between h-9')"
+                          :class="cn('justify-between')"
                           v-model="form.dataLogistik.hscode"
                           required
                         />
                         <ChevronsUpDown
-                          class="ml-2 h-4 w-4 shrink-0 opacity-50 absolute right-2 top-2.5"
+                          class="ml-2 h-4 w-4 shrink-0 opacity-50 absolute right-2"
                         />
                       </div>
                     </PopoverTrigger>
@@ -537,7 +536,7 @@ const onSubmit = async () => {
                     required
                   />
                 </div>
-                <div class="grid md:grid-cols-2 gap-2">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-2">
                   <div class="flex flex-col">
                     <label class="text-sm font-normal text-slate-700 mb-1"
                       >Origin City
@@ -631,7 +630,7 @@ const onSubmit = async () => {
                   </p>
                 </div>
                 <div
-                  class="flex flex-row items-center justify-between rounded-lg border p-4"
+                  class="flex flex-row items-center justify-between rounded-xl border p-4"
                 >
                   <div class="space-y-0.5">
                     <label class="text-base"> Exporter Data </label>
@@ -669,7 +668,7 @@ const onSubmit = async () => {
                     required
                   />
                 </div>
-                <div class="grid md:grid-cols-2 gap-2">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-2">
                   <div class="flex flex-col">
                     <label class="text-sm font-normal text-slate-700 mb-1"
                       >Exporter’s Origin City
@@ -677,7 +676,7 @@ const onSubmit = async () => {
                     >
                     <Popover>
                       <PopoverTrigger as-child>
-                        <div class="relative">
+                        <div class="relative flex justify-center items-center">
                           <Input
                             type="text"
                             placeholder="e.g. Jakarta - Halim Perdana Kusuma - HLP"
@@ -687,7 +686,7 @@ const onSubmit = async () => {
                             required
                           />
                           <ChevronsUpDown
-                            class="ml-2 h-4 w-4 shrink-0 opacity-50 absolute right-2 top-2.5"
+                            class="ml-2 h-4 w-4 shrink-0 opacity-50 absolute right-2"
                           />
                         </div>
                       </PopoverTrigger>
@@ -760,7 +759,7 @@ const onSubmit = async () => {
                     required
                   />
                 </div>
-                <div class="grid md:grid-cols-2 gap-2">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-2">
                   <div id="cityTo" class="flex flex-col">
                     <label class="text-sm font-normal text-slate-700 mb-1"
                       >Destination City
@@ -768,7 +767,7 @@ const onSubmit = async () => {
                     >
                     <Popover>
                       <PopoverTrigger as-child>
-                        <div class="relative">
+                        <div class="relative flex justify-center items-center">
                           <Input
                             type="text"
                             placeholder="e.g. Brisbane - BNE"
@@ -778,7 +777,7 @@ const onSubmit = async () => {
                             required
                           />
                           <ChevronsUpDown
-                            class="ml-2 h-4 w-4 shrink-0 opacity-50 absolute right-2 top-2.5"
+                            class="ml-2 h-4 w-4 shrink-0 opacity-50 absolute right-2"
                           />
                         </div>
                       </PopoverTrigger>
@@ -848,7 +847,7 @@ const onSubmit = async () => {
                   >
                   <Popover>
                     <PopoverTrigger as-child>
-                      <div class="relative">
+                      <div class="relative flex justify-center items-center">
                         <Input
                           type="text"
                           placeholder="e.g. FORM A (FOR GENERAL PRODUCT), FORM HANDICRAFT (FOR HAND MADE PRODUCT)"
@@ -858,7 +857,7 @@ const onSubmit = async () => {
                           required
                         />
                         <ChevronsUpDown
-                          class="ml-2 h-4 w-4 shrink-0 opacity-50 absolute right-2 top-2.5"
+                          class="ml-2 h-4 w-4 shrink-0 opacity-50 absolute right-2"
                         />
                       </div>
                     </PopoverTrigger>
@@ -902,7 +901,7 @@ const onSubmit = async () => {
                   </Popover>
                 </div>
                 <div
-                  class="flex flex-row items-center justify-between rounded-lg border p-4"
+                  class="flex flex-row items-center justify-between rounded-xl border p-4"
                 >
                   <div class="space-y-0.5">
                     <label class="text-base">Importer Data </label>
@@ -928,7 +927,7 @@ const onSubmit = async () => {
                     required
                   />
                 </div>
-                <div class="grid md:grid-cols-2 gap-2">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-2">
                   <div id="cityTo" class="flex flex-col">
                     <label class="text-sm font-normal text-slate-700 mb-1"
                       >Importer's City
@@ -936,7 +935,7 @@ const onSubmit = async () => {
                     >
                     <Popover>
                       <PopoverTrigger as-child>
-                        <div class="relative">
+                        <div class="relative flex justify-center items-center">
                           <Input
                             type="text"
                             placeholder="e.g. Brisbane - BNE"
@@ -946,7 +945,7 @@ const onSubmit = async () => {
                             required
                           />
                           <ChevronsUpDown
-                            class="ml-2 h-4 w-4 shrink-0 opacity-50 absolute right-2 top-2.5"
+                            class="ml-2 h-4 w-4 shrink-0 opacity-50 absolute right-2"
                           />
                         </div>
                       </PopoverTrigger>
@@ -1030,7 +1029,9 @@ const onSubmit = async () => {
                   </RadioGroup>
                 </div>
               </div>
-              <Button type="submit"> Submit </Button>
+              <Button type="submit" class="h-11 text-base md:text-sm">
+                Place and Order
+              </Button>
             </form>
           </div>
         </div>

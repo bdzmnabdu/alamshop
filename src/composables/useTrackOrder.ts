@@ -8,13 +8,12 @@ const useTrackOrder = (ordernum: Ref<string>) => {
     queryKey: ["ordernum", currentOrder],
     queryFn: () => trackOrder(currentOrder.value),
     refetchOnWindowFocus: false,
-    enabled: !!currentOrder.value, // Pastikan query tidak dijalankan tanpa ordernum
+    enabled: !!currentOrder.value,
   });
 
-  // Observasi perubahan pada ordernum dan perbarui currentOrder
   watch(ordernum, (newVal) => {
     currentOrder.value = newVal;
-    refetch(); // Refetch data secara manual ketika ordernum berubah
+    refetch();
   });
 
   return { isLoading, isError, error, data, refetch };

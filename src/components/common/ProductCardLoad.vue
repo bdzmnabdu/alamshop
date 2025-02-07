@@ -11,7 +11,7 @@
     <div id="card-content" class="p-2 relative">
       <div class="w-full">
         <div class="animate-pulse bg-slate-300 w-2/4 h-4 my-2 rounded-md"></div>
-        <div class="animate-pulse bg-slate-300 w-full h-10 rounded-md"></div>
+        <div class="animate-pulse bg-slate-300 w-full h-8 rounded-xl"></div>
       </div>
     </div>
   </div>

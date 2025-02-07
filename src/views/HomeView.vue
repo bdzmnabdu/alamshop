@@ -3,6 +3,8 @@ import Categories from "@/components/layout/Categories.vue";
 import ProductList from "@/components/layout/ProductList.vue";
 import { onMounted, ref } from "vue";
 import { TokenService } from "@/services/TokenService";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 const isLoading = ref(true);
 
@@ -24,24 +26,31 @@ onMounted(() => {
         v-if="isLoading"
         class="animate-pulse w-full h-[100px] md:h-[200px] bg-slate-200 rounded-xl"
       ></div>
-      <div v-else class="relative w-full">
-        <img
-          src="@/assets/images/pln4-04.jpg"
-          alt="banner"
-          class="w-full object-cover border-2 rounded-xl border-neutral-100"
-        />
-        <div
-          class="absolute top-3 left-3 md:top-20 md:left-20 h-[60%] md:h-[100%] w-[60%] md:w-[40%]"
-        >
-          <h1 class="font-bold text-sm md:text-2xl mb-3 md:mb-12">
+      <div
+        v-else
+        :class="`w-full h-fit rounded-2xl bg-center border-2 border-neutral-100 flex items-center md:p-20 p-3`"
+        :style="{
+          backgroundImage: 'url(/images/pln4-04.jpg)',
+          backgroundRepeat: 'no-repeat',
+          backgroundSize: 'cover',
+          backgroundPosition: 'right center',
+        }"
+      >
+        <div class="h-full md:h-[100%] w-[60%] md:w-[40%]">
+          <h1 class="font-bold md:text-2xl mb-3 md:mb-12">
             You Order, We Deliver, Safely to Your Destination!
           </h1>
-          <a
-            href="/logistics"
-            class="bg-orange-500 hover:bg-orange-300 text-white text-xs md:text-sm py-2 px-3 rounded-full"
-            @click="generateToken"
-            >Start Sending</a
-          >
+          <RouterLink to="/logistics">
+            <Button
+              :class="
+                cn(
+                  'bg-orange-500 hover:bg-orange-300 text-white text-sm font-medium rounded-xl shadow-none p-5'
+                )
+              "
+              @click="generateToken"
+              >Start Sending
+            </Button>
+          </RouterLink>
         </div>
       </div>
     </section>

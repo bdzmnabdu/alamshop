@@ -39,12 +39,9 @@ const ordernum = ref("");
 const trackOrderStore = useTrackOrderStore();
 
 const onSubmit = (values: any) => {
-  //console.log(JSON.stringify(values, null, 2));
   ordernum.value = values.ordernum;
   trackOrderStore.state.ordernum = values.ordernum;
   router.push("/track-order");
-  // console.log(trackOrderStore.state.ordernum);
-  // console.log(trackOrderStore.state.data);
 };
 </script>
 <template>

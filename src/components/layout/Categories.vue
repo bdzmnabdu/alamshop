@@ -18,7 +18,7 @@ const listcat = [
           <RouterLink :to="cat.link">
             <Button
               variant="outline"
-              class="border rounded-md p-3 flex justify-center items-center cursor-pointer"
+              class="border p-3 flex justify-center items-center cursor-pointer"
             >
               <p class="text-center">{{ cat.catname }}</p>
             </Button>

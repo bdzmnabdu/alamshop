@@ -24,7 +24,6 @@ export const useCartStore = defineStore("cart", () => {
   });
 
   const itemCount = computed(() => {
-    // console.log(state.cart);
     return state.cart.length;
   });
 

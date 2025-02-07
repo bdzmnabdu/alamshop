@@ -56,14 +56,6 @@ const formatTitle = (title: any) => {
   return title.charAt(0).toUpperCase() + title.slice(1).toLowerCase();
 };
 
-// const productInCart = computed(() => {
-//   return (
-//     cartStore.state.cart.find(
-//       (item: any) => item.product_id === props.product?.product_id
-//     ) || { quantity: 0 }
-//   );
-// });
-
 const handleAddToCart = () => {
   cartStore.addToCart(props.product);
 };
@@ -74,12 +66,6 @@ const addQty = () => {
 
 const reduceQty = () => {
   cartStore.reduceFromCart(props.product);
-
-  // console.log(props?.product?.product_id);
-  // if (productInCart.value.quantity === 1) {
-  //   cartStore.removeFromCart(props?.product?.product_id);
-  // } else {
-  // }
 };
 
 const handleDeleteCart = (itemid: string) => {
@@ -89,7 +75,7 @@ const handleDeleteCart = (itemid: string) => {
 
 <template>
   <div
-    class="border border-neutral-200 rounded-xl hover:shadow-lg w-full overflow-hidden flex flex-col"
+    class="border border-neutral-200 rounded-2xl hover:shadow-lg w-full overflow-hidden flex flex-col"
   >
     <div class="flex-1 flex flex-col">
       <div class="h-40 border-b object-cover overflow-clip">
@@ -119,17 +105,17 @@ const handleDeleteCart = (itemid: string) => {
               <div
                 size="icon"
                 @click.prevent="handleAddToCart"
-                class="w-full rounded-lg text-sm bg-orange-100 hover:bg-orange-500 text-orange-900 hover:text-white p-2 cursor-pointer text-center"
+                class="w-full rounded-xl text-sm bg-orange-100 hover:bg-orange-500 text-orange-900 hover:text-white p-2 cursor-pointer text-center"
               >
                 Add to cart
               </div>
             </SheetTrigger>
             <SheetContent
               :side="sideSheet"
-              class="h-[500px] md:h-full data-[state=open]"
+              class="h-[500px] md:h-full data-[state=open] p-0"
             >
               <div class="flex flex-col justify-between items-center h-full">
-                <div class="w-full">
+                <div class="w-11/12 my-5">
                   <SheetHeader class="text-left">
                     <SheetTitle>My Cart({{ cartStore.itemCount }})</SheetTitle>
                     <SheetDescription
@@ -143,7 +129,7 @@ const handleDeleteCart = (itemid: string) => {
                       <div
                         v-for="item in cartStore.state.cart"
                         :key="item.product_id"
-                        class="flex items-center gap-2 border rounded-md my-2 p-1"
+                        class="flex items-center gap-2 border rounded-md my-2 p-3"
                       >
                         <div
                           id="img-itm"
@@ -198,11 +184,15 @@ const handleDeleteCart = (itemid: string) => {
                     <ScrollBar orientation="vertical" />
                   </ScrollArea>
                 </div>
-                <div class="bg-neutral-100 p-2 rounded-md w-full">
+                <div class="bg-neutral-100 p-2 rounded-md w-full -mt-3">
                   <SheetFooter>
                     <SheetClose>
                       <RouterLink to="/checkout">
-                        <Button type="submit" class="w-full">Checkout </Button>
+                        <Button
+                          type="submit"
+                          class="float-right text-base h-11 md:h-9 md:text-sm"
+                          >Checkout ({{ cartStore.itemCount }})
+                        </Button>
                       </RouterLink>
                     </SheetClose>
                   </SheetFooter>

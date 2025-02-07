@@ -40,11 +40,9 @@ const { isLoading, isError, products } = useProducts(
 const cols = computed(() =>
   catId.value ? "md:grid-cols-4" : "md:grid-cols-5"
 );
-// console.log(cols.value);
 
 const currentPageFn = (page: number) => {
   currentPage.value = page;
-  // console.log(currentPage.value);
 };
 const updatePage = () => {
   currentPageFn(1);

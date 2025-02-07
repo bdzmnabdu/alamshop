@@ -98,10 +98,10 @@ onMounted(() => {
   <section class="h-[600px] mb-9 mx-2 md:mx-32 flex-1">
     <RouterLink
       :to="{ path: '/' }"
-      class="flex items-center gap-3 cursor-pointer mt-5 w-fit"
+      class="flex items-center gap-3 cursor-pointer mt-5 w-fit bg-orange-100 py-2 px-3 rounded-xl"
     >
-      <span class="pi pi-arrow-left text-xs"></span>
-      <p class="text-sm hover:underline">Back</p>
+      <span class="pi pi-arrow-left text-xs text-orange-900"></span>
+      <p class="text-sm hover:underline text-orange-900">Back</p>
     </RouterLink>
 
     <!-- Main Content -->
@@ -109,7 +109,7 @@ onMounted(() => {
       <!-- Filter Sidebar -->
       <div
         id="filter"
-        class="border border-neutral-200 rounded-xl h-fit p-4 flex flex-col justify-between md:w-1/5 md:sticky md:top-20"
+        class="border border-neutral-200 rounded-2xl h-fit p-4 flex flex-col justify-between md:w-1/5 md:sticky md:top-20"
       >
         <div id="acc">
           <Accordion type="multiple" class="w-full" collapsible>

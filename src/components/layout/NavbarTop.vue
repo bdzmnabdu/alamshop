@@ -124,9 +124,9 @@ const handleSearch = () => {
               </div>
             </SheetTrigger>
 
-            <SheetContent :side="sideSheet" class="h-[500px] md:h-full">
+            <SheetContent :side="sideSheet" class="h-[500px] md:h-full p-0">
               <div class="flex flex-col justify-between items-center h-full">
-                <div class="w-full">
+                <div class="w-11/12 my-5">
                   <SheetHeader class="text-left">
                     <SheetTitle>My Cart({{ cartStore.itemCount }})</SheetTitle>
                     <SheetDescription
@@ -140,7 +140,7 @@ const handleSearch = () => {
                       <div
                         v-for="item in cartStore.state.cart"
                         :key="item.product_id"
-                        class="flex items-center gap-2 border rounded-md my-2 p-1"
+                        class="flex items-center gap-2 border rounded-md my-2 p-3"
                       >
                         <div
                           id="img-itm"
@@ -203,7 +203,7 @@ const handleSearch = () => {
                           type="submit"
                           class="w-full"
                           @click="generateToken"
-                          >Checkout
+                          >Checkout ({{ cartStore.itemCount }})
                         </Button>
                       </RouterLink>
                     </SheetClose>
@@ -251,9 +251,9 @@ const handleSearch = () => {
                 </div>
               </SheetTrigger>
 
-              <SheetContent :side="sideSheet" class="h-[500px] md:h-full">
+              <SheetContent :side="sideSheet" class="h-[500px] md:h-full p-0">
                 <div class="flex flex-col justify-between items-center h-full">
-                  <div class="w-full">
+                  <div class="w-11/12 my-5">
                     <SheetHeader class="text-left">
                       <SheetTitle
                         >My Cart({{ cartStore.itemCount }})</SheetTitle
@@ -269,7 +269,7 @@ const handleSearch = () => {
                         <div
                           v-for="item in cartStore.state.cart"
                           :key="item.product_id"
-                          class="flex items-center gap-2 border rounded-md my-2 p-1"
+                          class="flex items-center gap-2 border rounded-md my-2 p-3"
                         >
                           <div
                             id="img-itm"
@@ -326,15 +326,15 @@ const handleSearch = () => {
                       <ScrollBar orientation="vertical" />
                     </ScrollArea>
                   </div>
-                  <div class="bg-neutral-100 p-2 rounded-md w-full">
+                  <div class="bg-neutral-100 p-2 w-full -mt-3">
                     <SheetFooter>
                       <SheetClose>
                         <RouterLink to="/checkout">
                           <Button
                             type="submit"
-                            class="w-full"
+                            class="float-right text-base h-11"
                             @click="generateToken"
-                            >Checkout
+                            >Checkout ({{ cartStore.itemCount }})
                           </Button>
                         </RouterLink>
                       </SheetClose>

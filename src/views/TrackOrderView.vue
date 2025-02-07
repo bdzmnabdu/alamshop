@@ -64,22 +64,24 @@ const onSubmit = (values: any) => {
   <section class="md:px-20 py-5 md:py-12 mb-9 mx-2 md:mx-32 flex-1">
     <div
       id="search-order"
-      class="border border-slate-200 p-5 rounded-xl w-full"
+      class="border border-slate-200 p-3 md:p-5 rounded-2xl w-full"
     >
       <Form :validation-schema="formSchema" @submit="onSubmit">
-        <div class="flex justify-start items-center gap-3">
+        <div class="">
           <FormField v-slot="{ field }" name="ordernum" class="">
             <FormItem>
               <FormLabel>Your order number</FormLabel>
               <FormControl>
-                <div class="flex justify-start items-center gap-2">
+                <div class="flex justify-start items-center gap-2 w-full">
                   <Input
                     type="text"
                     placeholder="e.g. 45000000010"
                     v-bind="field"
-                    class="w-[245px] md:w-[300px]"
+                    class="w-full md:w-[300px]"
                   />
-                  <Button type="submit"> Search </Button>
+                  <Button type="submit" class="h-11">
+                    <i class="pi pi-search" style="font-size: 0.9rem"></i>
+                  </Button>
                 </div>
               </FormControl>
               <FormMessage />
@@ -165,8 +167,11 @@ const onSubmit = (values: any) => {
       </div>
     </div>
     <div v-if="!isLoading && data?.status === 400" class="mt-5 w-full">
-      <div class="mb-5">
-        <p>No results found for: '{{ ordernum }}'</p>
+      <div class="mb-5 ml-3 md:m-0">
+        <p>
+          No results found for:
+          <span class="text-blue-500">{{ ordernum }} </span>
+        </p>
       </div>
     </div>
   </section>

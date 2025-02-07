@@ -25,6 +25,7 @@ import { Check, ChevronsUpDown } from "lucide-vue-next";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { reactive, defineProps, defineEmits, watch, ref } from "vue";
+import { Calendar as CalendarIcon } from "lucide-vue-next";
 
 import useHSCode from "@/composables/useHSCode";
 import useCities from "@/composables/useCities";
@@ -147,16 +148,16 @@ watch(
         <label class="text-sm font-normal text-slate-700 mb-1">HS Code </label>
         <Popover>
           <PopoverTrigger as-child>
-            <div class="relative">
+            <div class="relative flex justify-center items-center">
               <Input
                 type="text"
                 placeholder="e.g. 129003849"
                 role="combobox"
-                :class="cn('justify-between h-9')"
+                :class="cn('justify-between h-11')"
                 v-model="form.hscode"
               />
               <ChevronsUpDown
-                class="ml-2 h-4 w-4 shrink-0 opacity-50 absolute right-2 top-2.5"
+                class="ml-2 h-4 w-4 shrink-0 opacity-50 absolute right-2"
               />
             </div>
           </PopoverTrigger>
@@ -234,7 +235,7 @@ watch(
           required
         />
       </div>
-      <div class="grid md:grid-cols-2 gap-2">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-2">
         <div class="flex flex-col">
           <label class="text-sm font-normal text-slate-700 mb-1"
             >Origin City
@@ -242,7 +243,7 @@ watch(
           >
           <Popover>
             <PopoverTrigger as-child>
-              <div class="relative">
+              <div class="relative flex items-center justify-center">
                 <Input
                   type="text"
                   placeholder="e.g. Jakarta - Halim Perdana Kusuma - HLP"
@@ -252,7 +253,7 @@ watch(
                   required
                 />
                 <ChevronsUpDown
-                  class="ml-2 h-4 w-4 shrink-0 opacity-50 absolute right-2 top-2.5"
+                  class="ml-2 h-4 w-4 shrink-0 opacity-50 absolute right-2"
                 />
               </div>
             </PopoverTrigger>
@@ -318,7 +319,7 @@ watch(
           required
         />
       </div>
-      <div class="grid md:grid-cols-2 gap-2">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-2">
         <div id="cityTo" class="flex flex-col">
           <label class="text-sm font-normal text-slate-700 mb-1"
             >Destination City
@@ -326,7 +327,7 @@ watch(
           >
           <Popover>
             <PopoverTrigger as-child>
-              <div class="relative">
+              <div class="relative flex justify-center items-center">
                 <Input
                   type="text"
                   placeholder="e.g. Brisbane - BNE"
@@ -336,7 +337,7 @@ watch(
                   required
                 />
                 <ChevronsUpDown
-                  class="ml-2 h-4 w-4 shrink-0 opacity-50 absolute right-2 top-2.5"
+                  class="ml-2 h-4 w-4 shrink-0 opacity-50 absolute right-2"
                 />
               </div>
             </PopoverTrigger>
@@ -399,7 +400,7 @@ watch(
           <span class="text-red-500 font-semibold">*</span></label
         >
         <Select v-model="form.jeniskemasan" required>
-          <SelectTrigger class="w-full h-9">
+          <SelectTrigger class="w-full h-11 rounded-xl">
             <SelectValue placeholder="Select packaging type" />
           </SelectTrigger>
 
@@ -467,13 +468,22 @@ watch(
         <label class="text-sm font-normal text-slate-700 mb-1"
           >Order Date <span class="text-red-500 font-semibold">*</span></label
         >
-        <input
-          v-model="form.orderdate"
-          type="date"
-          placeholder="Pick Order Date"
-          class="h-9 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-          required
-        />
+        <div class="relative w-full flex justify-center items-center">
+          <input
+            v-model="form.orderdate"
+            type="date"
+            placeholder="Pick Order Date"
+            class="appearance-none md:appearance-auto h-11 w-full rounded-xl border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+            required
+          />
+          <div
+            v-if="!form.orderdate"
+            class="md:hidden flex items-center justify-start gap-1 absolute left-2"
+          >
+            <CalendarIcon class="mr-2 h-4 w-4" />
+            <p class="text-slate-500">dd/mm/yyyy</p>
+          </div>
+        </div>
       </div>
       <div id="metodelogistik">
         <label class="text-sm font-normal text-slate-700 mb-1"
@@ -485,10 +495,10 @@ watch(
           @update:modelValue="handleChange"
           aria-required="true"
         >
-          <SelectTrigger class="w-full h-9">
+          <SelectTrigger class="w-full h-11 rounded-xl">
             <SelectValue placeholder="Select Logistics" />
           </SelectTrigger>
-          <SelectContent class="w-[300px] md:w-full">
+          <SelectContent class="w-[400px] md:w-full">
             <SelectGroup>
               <SelectItem value="noalamlog">
                 Already has its own logistics choice and will pick up the goods

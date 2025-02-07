@@ -18,7 +18,7 @@ import { Button } from "@/components/ui/button";
 
 const router = useRouter();
 const route = useRoute();
-const keyword = ref(decodeURIComponent(route.query.keyword as string) || ""); // Mengambil query 'src' dari URL
+const keyword = ref(decodeURIComponent(route.query.keyword as string) || "");
 const currentPage = ref(1);
 
 const { isLoading, isError, product, refetch } = useProductsByKeyword(
@@ -64,13 +64,10 @@ onMounted(() => {
             <span class="font-semibold text-blue-500">{{ keyword }}</span>
           </p>
         </div>
-        <div
-          v-if="product && product.itemsprd.length > 0"
-          class="mt-3 grid grid-cols-2 md:grid-cols-5 gap-4 flex-1"
-        >
+        <div class="mt-3 grid grid-cols-2 md:grid-cols-5 gap-4 flex-1">
           <ProductCardLoad v-if="isLoading" v-for="n in 10" :key="n" />
           <ProductCard
-            v-else
+            v-if="!isLoading && product && product.itemsprd.length > 0"
             v-for="prd in product.itemsprd"
             :key="prd.product_id"
             :product="prd"
