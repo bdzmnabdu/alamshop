@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { RouterLink } from "vue-router";
-// import { Button } from "@/components/ui/button";
 import { FishSymbol } from "lucide-vue-next";
 
 const listcat = [

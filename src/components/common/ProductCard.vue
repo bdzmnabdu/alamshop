@@ -25,7 +25,6 @@ import {
   Dialog,
   DialogContent,
   DialogFooter,
-  DialogClose,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import RadioForm from "@/components/common/RadioForm.vue";
@@ -97,13 +96,7 @@ const handleAddToCart = () => {
   cartStore.addToCart(props.product, selectedOption.value);
 };
 
-// const addQty = (cond: string) => {
-//   console.log(cartStore.state.cart);
-//   // cartStore.addToCart(props.product, cond);
-// };
-
 const reduceQty = (productId: string, cond: string) => {
-  // console.log(cartStore.state.cart);
   cartStore.reduceFromCart(productId, cond);
 };
 

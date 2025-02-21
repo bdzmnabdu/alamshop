@@ -34,25 +34,17 @@ export const useCartStore = defineStore("cart", () => {
       (item: CartItem) =>
         item.product_id === product.product_id && item.cond === cond
     );
-    // const existingProductCond = state.cart.find(
-    //   (item: CartItem) => item.cond === cond
-    // );
+
     if (existingProduct) {
       existingProduct.quantity++;
     } else {
       state.cart.unshift({ ...product, quantity: 1, cond });
     }
-    // if (existingProduct && existingProductCond) {
-    //   existingProductCond.quantity++;
-    // } else {
-    //   state.cart.unshift({ ...product, quantity: 1, cond });
-    // }
+
     console.log(state.cart);
   };
 
   const reduceFromCart = (productId: string, cond: string) => {
-    // console.log(product);
-    // const productId = product.product_id;
     const findProduct = state.cart.find(
       (item: CartItem) => item.product_id === productId && item.cond === cond
     );
@@ -60,27 +52,12 @@ export const useCartStore = defineStore("cart", () => {
     if (findProduct && findProduct.quantity < 1) {
       removeFromCart(productId, cond);
     }
-    // if (findProduct) {
-    //   if (findProduct.quantity > 1) {
-    //     findProduct.quantity--;
-    //   } else {
-    //     removeFromCart(productId, cond);
-    //   }
-    // }
-    // if (findProduct && findProduct.quantity > 0) {
-    //   findProduct.quantity--;
-    // } else {
-    //   removeFromCart(productId, cond);
-    // }
-    console.log(state.cart);
   };
 
   const removeFromCart = (productId: string, cond: string) => {
-    // console.log("Before:", state.cart);
     state.cart = state.cart.filter(
       (item: CartItem) => item.product_id !== productId || item.cond !== cond
     );
-    // console.log("After:", state.cart);
   };
 
   const clearCart = () => {

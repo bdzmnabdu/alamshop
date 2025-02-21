@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, defineProps, defineEmits, computed, watch } from "vue";
+import { defineProps, defineEmits, computed } from "vue";
 
 const props = defineProps<{
   selectedOption: string;
@@ -7,8 +7,6 @@ const props = defineProps<{
 }>();
 const emit = defineEmits(["update:selectedOption"]);
 
-console.log(props.productId);
-// const optionVal = ref<string>("");
 const optionVal = computed({
   get: () => props.selectedOption,
   set: (value) => {
@@ -22,18 +20,6 @@ const options = [
   { value: "frozen", label: "Frozen", optFor: ["AC", "AK"] },
   { value: "fresh", label: "Fresh", optFor: ["AC", "AK"] },
 ];
-// const updateSelectedOption = (option: string) => {
-//   console.log(option);
-//   optionVal.value = option;
-//   emit("update:selectedOption", optionVal.value);
-//   console.log(optionVal.value);
-//   console.log(props.selectedOption);
-// };
-// watch(optionVal, (newValue) => {
-//   console.log(optionVal.value);
-//   console.log(props.selectedOption);
-//   //   optionVal.value = newValue;
-// });
 </script>
 
 <template>

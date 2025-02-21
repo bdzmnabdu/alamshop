@@ -7,7 +7,6 @@ const useProducts = (
   catId?: ComputedRef<string | undefined>,
   waterType?: Ref<string | string[] | undefined>
 ) => {
-  // console.log("waterType:", waterType?.value);
   const { isFetching, isError, data, error } = useQuery({
     queryKey: ["products", currentPage, "catid", catId, "waterType", waterType],
     queryFn: () =>

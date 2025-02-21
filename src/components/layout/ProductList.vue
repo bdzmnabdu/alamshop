@@ -15,7 +15,6 @@ import {
   PaginationNext,
   PaginationPrev,
 } from "@/components/ui/pagination";
-// import { DotLottieVue } from "@lottiefiles/dotlottie-vue";
 
 const route = useRoute();
 
@@ -107,12 +106,6 @@ watch([catId, waterType], updatePage, { deep: true });
     "
     class="text-center flex flex-col justify-center items-center mb-9 mx-2 md:mx-32 flex-1 p-20"
   >
-    <!-- <DotLottieVue
-      style="height: 200px; width: 200px"
-      autoplay
-      loop
-      src="https://lottie.host/7c1ce286-9d9e-40ce-93b7-0a2e06dfd912/Qpx5pDtsXP.lottie"
-    /> -->
     <img
       src="@/assets/images/empty-draw.png"
       style="height: 150px; width: 200px"
