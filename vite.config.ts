@@ -13,10 +13,17 @@ export default defineConfig({
   },
   server: {
     port: 3845,
+    proxy: {
+      "/txn": "https://alams.gcgoptima.id",
+    },
+    allowedHosts: true,
   },
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
     },
+  },
+  optimizeDeps: {
+    exclude: ["oh-vue-icons/icons"],
   },
 });

@@ -28,7 +28,7 @@ if (!token && !TokenService.verifyToken(token as string)) {
       </p>
       <RouterLink
         to="/"
-        class="text-white bg-orange-400 hover:bg-orange-600 rounded-md px-3 py-2 mt-4 mb-20"
+        class="text-white bg-orange-500 hover:bg-orange-300 rounded-xl px-3 py-2 mt-4 mb-20"
         >Shop Again</RouterLink
       >
     </div>

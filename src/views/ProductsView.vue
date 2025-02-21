@@ -21,18 +21,11 @@ const accordionItems = [
     value: "categories",
     title: "Categories",
     options: [
-      { optName: "Ornamental Fish", optVal: "live" },
-      { optName: "Consumption Fish", optVal: "faf" },
-      { optName: "Sea Food", optVal: "lff" },
-      { optName: "Fry Fish", optVal: "fry" },
-    ],
-  },
-  {
-    value: "water-type",
-    title: "Water Type",
-    options: [
-      { optName: "Freshwater", optVal: "freshwater" },
-      { optName: "Saltwater", optVal: "saltwater" },
+      { optName: "Ornamental Freshwater Fish", optVal: "aof" },
+      { optName: "Ornamental Saltwater Fish", optVal: "aos" },
+      { optName: "Consumption Fish", optVal: "ac" },
+      { optName: "Sea Food", optVal: "ak" },
+      { optName: "Fry Fish", optVal: "aff" },
     ],
   },
 ];
@@ -40,27 +33,27 @@ const accordionItems = [
 // Variabel filter yang dipilih
 const selectedCategory = ref<string | undefined>(undefined);
 // console.log(selectedCategory.value);
-const selectedWaterType = ref<string[]>([]);
+// const selectedWaterType = ref<string[]>([]);
 
-const handleWaterTypeChange = (waterType: string) => {
-  if (selectedWaterType.value.includes(waterType)) {
-    selectedWaterType.value = selectedWaterType.value.filter(
-      (item) => item !== waterType
-    );
-  } else {
-    selectedWaterType.value.push(waterType);
-  }
-};
+// const handleWaterTypeChange = (waterType: string) => {
+//   if (selectedWaterType.value.includes(waterType)) {
+//     selectedWaterType.value = selectedWaterType.value.filter(
+//       (item) => item !== waterType
+//     );
+//   } else {
+//     selectedWaterType.value.push(waterType);
+//   }
+// };
 
 const updateURL = () => {
   if (!selectedCategory.value) return;
 
-  const params = new URLSearchParams();
-  if (selectedWaterType.value.length > 0) {
-    selectedWaterType.value.forEach((type) => {
-      params.append("water-type", type);
-    });
-  }
+  // const params = new URLSearchParams();
+  // if (selectedWaterType.value.length > 0) {
+  //   selectedWaterType.value.forEach((type) => {
+  //     params.append("water-type", type);
+  //   });
+  // }
 
   const categoryValue = accordionItems[0].options.find(
     (cat) => cat.optVal === selectedCategory.value
@@ -73,25 +66,26 @@ const updateURL = () => {
 
   router.push({
     path: `/products/fishery/${categoryValue}`,
-    query: {
-      waterType:
-        selectedWaterType.value.length > 0
-          ? selectedWaterType.value
-          : undefined,
-    },
+    // query: {
+    //   waterType:
+    //     selectedWaterType.value.length > 0
+    //       ? selectedWaterType.value
+    //       : undefined,
+    // },
   });
 };
 
-watch([selectedCategory, selectedWaterType], updateURL, { deep: true });
+watch([selectedCategory], updateURL, { deep: true });
+// watch([selectedCategory, selectedWaterType], updateURL, { deep: true });
 
 onMounted(() => {
   selectedCategory.value = (route.params.catId as string) || undefined;
-  const waterTypeQuery = route.query.waterType as string | string[];
-  selectedWaterType.value = Array.isArray(waterTypeQuery)
-    ? waterTypeQuery
-    : waterTypeQuery
-    ? [waterTypeQuery]
-    : [];
+  // const waterTypeQuery = route.query.waterType as string | string[];
+  // selectedWaterType.value = Array.isArray(waterTypeQuery)
+  //   ? waterTypeQuery
+  //   : waterTypeQuery
+  //   ? [waterTypeQuery]
+  //   : [];
 });
 </script>
 <template>
@@ -112,29 +106,33 @@ onMounted(() => {
         class="border border-neutral-200 rounded-2xl h-fit p-4 flex flex-col justify-between md:w-1/5 md:sticky md:top-20"
       >
         <div id="acc">
-          <Accordion type="multiple" class="w-full" collapsible>
+          <div class="w-full">
             <!-- Kategori (Radio Group) -->
-            <AccordionItem value="categories">
-              <AccordionTrigger class="text-sm">Categories</AccordionTrigger>
-              <AccordionContent>
+            <div>
+              <h3 class="text-base font-medium mb-3">Categories</h3>
+              <div>
                 <RadioGroup v-model="selectedCategory">
                   <div
                     v-for="(opt, index) in accordionItems[0].options"
                     :key="index"
-                    class="flex items-center space-x-2"
+                    class="flex items-start space-x-2 my-1"
                   >
                     <RadioGroupItem
                       :id="`category-${index}`"
                       :value="opt.optVal"
                     />
-                    <Label :for="`category-${index}`">{{ opt.optName }}</Label>
+                    <Label
+                      :for="`category-${index}`"
+                      class="leading-4 font-normal"
+                      >{{ opt.optName }}</Label
+                    >
                   </div>
                 </RadioGroup>
-              </AccordionContent>
-            </AccordionItem>
+              </div>
+            </div>
 
             <!-- Water Type (Checkbox) -->
-            <AccordionItem value="water-type">
+            <!-- <AccordionItem value="water-type">
               <AccordionTrigger class="text-sm">Water Type</AccordionTrigger>
               <AccordionContent
                 v-for="(opt, index) in accordionItems[1].options"
@@ -149,8 +147,8 @@ onMounted(() => {
                   <Label :for="`waterType-${index}`">{{ opt.optName }}</Label>
                 </div>
               </AccordionContent>
-            </AccordionItem>
-          </Accordion>
+            </AccordionItem> -->
+          </div>
         </div>
       </div>
       <div id="allprd" class="md:w-4/5">

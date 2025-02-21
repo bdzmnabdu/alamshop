@@ -2,15 +2,10 @@
 import Categories from "@/components/layout/Categories.vue";
 import ProductList from "@/components/layout/ProductList.vue";
 import { onMounted, ref } from "vue";
-import { TokenService } from "@/services/TokenService";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const isLoading = ref(true);
-
-const generateToken = () => {
-  TokenService.generateToken();
-};
 
 onMounted(() => {
   setTimeout(() => {
@@ -21,7 +16,9 @@ onMounted(() => {
 <template>
   <section class="h-[600px] mb-9 mx-2 md:mx-32 flex-1">
     <section id="banner-log">
-      <h1 class="mt-5 mb-3 font-semibold">Alam Logistic</h1>
+      <h1 class="mt-5 mb-3 font-semibold text-base 2xl:text-xl">
+        Alam Logistic
+      </h1>
       <div
         v-if="isLoading"
         class="animate-pulse w-full h-[100px] md:h-[200px] bg-slate-200 rounded-xl"
@@ -47,17 +44,18 @@ onMounted(() => {
                   'bg-orange-500 hover:bg-orange-300 text-white text-sm font-medium rounded-xl shadow-none p-5'
                 )
               "
-              @click="generateToken"
               >Start Sending
             </Button>
           </RouterLink>
         </div>
       </div>
     </section>
-    <h1 class="mt-5 font-semibold">Explore by Categories</h1>
+    <h1 class="mt-5 font-semibold text-base 2xl:text-xl">
+      Explore by Categories
+    </h1>
     <Categories />
     <hr class="m-5" />
-    <h1 class="mt-5 font-semibold">Our Products</h1>
+    <h1 class="mt-5 font-semibold text-base 2xl:text-xl">Our Products</h1>
     <ProductList />
   </section>
 </template>

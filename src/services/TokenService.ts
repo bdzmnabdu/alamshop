@@ -9,7 +9,7 @@ export const TokenService = {
       .setExpirationTime("1h")
       .sign(SECRET_KEY);
 
-    localStorage.setItem("jwt", token);
+    sessionStorage.setItem("jwt", token);
     // return token;
   },
 
@@ -23,10 +23,10 @@ export const TokenService = {
   },
 
   getToken() {
-    return localStorage.getItem("jwt");
+    return sessionStorage.getItem("jwt");
   },
 
   removeToken() {
-    localStorage.removeItem("jwt");
+    sessionStorage.removeItem("jwt");
   },
 };

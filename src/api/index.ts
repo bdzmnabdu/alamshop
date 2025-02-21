@@ -20,7 +20,7 @@ export const getAllProducts = async (
     const vars: Vars = { page_num: page, catId, waterType };
     console.log(vars);
     const encodeVars = encodeURIComponent(JSON.stringify(vars));
-    const url = `${API_BASE_URL}/txn?fnc=runLib;opic=${apicode};csn=${workspace};rc=${servicecode};vars=${encodeVars}`;
+    const url = `/txn?fnc=runLib;opic=${apicode};csn=${workspace};rc=${servicecode};vars=${encodeVars}`;
     const res = await axios.get(url);
     console.log(res.data);
     return res.data;
@@ -35,7 +35,7 @@ export const getProductsByKeyword = async (keyword: string, page: number) => {
       const servicecode = "cRZG/jjiOBqmJETiIQn80%2BsUprhI2CdGPTPvkQd/bHg%3D";
       const vars = { keyword, page_num: page };
       const encodeVars = encodeURIComponent(JSON.stringify(vars));
-      const url = `${API_BASE_URL}/txn?fnc=runLib;opic=${apicode};csn=${workspace};rc=${servicecode};vars=${encodeVars}`;
+      const url = `/txn?fnc=runLib;opic=${apicode};csn=${workspace};rc=${servicecode};vars=${encodeVars}`;
       const res = await axios.get(url);
       console.log(res.data);
       return res.data;
@@ -52,7 +52,7 @@ export const getHSCode = async (hsc?: string | undefined) => {
     const servicecode = "88vBgix/qQBYQ5rlHz%2Bh5BQTkQlMyxngCZpA4%2Bdk5EM%3D";
     const vars = { hscode: hsc };
     const encodeVars = encodeURIComponent(JSON.stringify(vars));
-    const url = `${API_BASE_URL}/txn?fnc=runLib;opic=${apicode};csn=${workspace};rc=${servicecode};vars=${encodeVars}`;
+    const url = `/txn?fnc=runLib;opic=${apicode};csn=${workspace};rc=${servicecode};vars=${encodeVars}`;
     const res = await axios.get(url);
     console.log(res.data);
     return res.data;
@@ -64,7 +64,7 @@ export const getHSCode = async (hsc?: string | undefined) => {
 export const searchHSCode = async () => {
   try {
     const servicecode = "88vBgix/qQBYQ5rlHz%2Bh5BQTkQlMyxngCZpA4%2Bdk5EM%3D";
-    const url = `${API_BASE_URL}/txn?fnc=runLib;opic=${apicode};csn=${workspace};rc=${servicecode}`;
+    const url = `/txn?fnc=runLib;opic=${apicode};csn=${workspace};rc=${servicecode}`;
     const res = await axios.get(url);
     console.log(res.data);
     return res.data;
@@ -76,7 +76,7 @@ export const searchHSCode = async () => {
 export const getCity = async () => {
   try {
     const servicecode = "88vBgix/qQC1SeS2D7C8tqKTt9j/mkU1";
-    const url = `${API_BASE_URL}/txn?fnc=runLib;opic=${apicode};csn=${workspace};rc=${servicecode}`;
+    const url = `/txn?fnc=runLib;opic=${apicode};csn=${workspace};rc=${servicecode}`;
     const res = await axios.get(url);
     return res.data;
   } catch (error) {
@@ -87,7 +87,7 @@ export const getCity = async () => {
 export const getSKACOO = async () => {
   try {
     const servicecode = "88vBgix/qQBSeP1tzLGMjXfcbGDf7qgOvZUIoFC/Ku0%3D";
-    const url = `${API_BASE_URL}/txn?fnc=runLib;opic=${apicode};csn=${workspace};rc=${servicecode}`;
+    const url = `/txn?fnc=runLib;opic=${apicode};csn=${workspace};rc=${servicecode}`;
     const res = await axios.get(url);
     return res.data;
   } catch (error) {
@@ -101,7 +101,7 @@ export const trackOrder = async (order_num: string) => {
       const servicecode = "88vBgix/qQC2SF%2BLDtKfxH2o4cUMmif3v5%2BP9TeZRW8%3D";
       const vars = { ordernum: order_num };
       const encodeVars = encodeURIComponent(JSON.stringify(vars));
-      const url = `${API_BASE_URL}/txn?fnc=runLib;opic=${apicode};csn=${workspace};rc=${servicecode};vars=${encodeVars}`;
+      const url = `/txn?fnc=runLib;opic=${apicode};csn=${workspace};rc=${servicecode};vars=${encodeVars}`;
       const res = await axios.get(url);
       console.log(res.data);
       return res.data;
@@ -116,7 +116,7 @@ export const trackOrder = async (order_num: string) => {
 export const getPack = async () => {
   try {
     const servicecode = "88vBgix/qQAelwYLS2jKVjGu9F7AH49d";
-    const url = `${API_BASE_URL}/txn?fnc=runLib;opic=${apicode};csn=${workspace};rc=${servicecode}`;
+    const url = `/txn?fnc=runLib;opic=${apicode};csn=${workspace};rc=${servicecode}`;
     const res = await axios.get(url);
     return res.data;
   } catch (error) {
@@ -147,7 +147,7 @@ export const postQuo = async (formDataQuo: any) => {
     fd.append("argl", JSON.stringify(data_quo));
 
     const servicecode = "88vBgix/qQDxtg37IwTCDtGu4lY7f0wP";
-    const url = `${API_BASE_URL}/txn?fnc=runLib;opic=${apicode};csn=${workspace};rc=${servicecode}`;
+    const url = `/txn?fnc=runLib;opic=${apicode};csn=${workspace};rc=${servicecode}`;
     const response = await axios.post(url, fd, {
       headers: {
         "Content-Type": "multipart/form-data",
@@ -180,7 +180,7 @@ export const postQuoLog = async (formDataQuo: any) => {
     fd.append("argl", JSON.stringify(data_quo));
 
     const servicecode = "88vBgix/qQDxtg37IwTCDtGu4lY7f0wP";
-    const url = `${API_BASE_URL}/txn?fnc=runLib;opic=${apicode};csn=${workspace};rc=${servicecode}`;
+    const url = `/txn?fnc=runLib;opic=${apicode};csn=${workspace};rc=${servicecode}`;
     const response = await axios.post(url, fd, {
       headers: {
         "Content-Type": "multipart/form-data",

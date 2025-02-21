@@ -33,18 +33,18 @@ import useCities from "@/composables/useCities";
 import { postQuoLog } from "@/api";
 import { useRouter } from "vue-router";
 import useSkaCoo from "@/composables/useSkaCoo";
-import { TokenService } from "@/services/TokenService";
+// import { TokenService } from "@/services/TokenService";
 
 const router = useRouter();
 
-const token = TokenService.getToken();
-if (!token && !TokenService.verifyToken(token as string)) {
-  router.push("/");
-}
+// const token = TokenService.getToken();
+// if (!token && !TokenService.verifyToken(token as string)) {
+//   router.push("/");
+// }
 
-const removeToken = () => {
-  TokenService.removeToken();
-};
+// const removeToken = () => {
+//   TokenService.removeToken();
+// };
 
 interface FormLogistik {
   formId?: string;
@@ -262,7 +262,6 @@ const onSubmit = async () => {
       // Redirect ke WhatsApp
       window.open(waUrl, "_blank");
     }
-    removeToken();
   } catch (error) {
     throw error;
   }
@@ -281,7 +280,7 @@ const onSubmit = async () => {
             <p class="text-sm hover:underline text-orange-900">Back</p>
           </RouterLink>
         </div>
-        <div id="form" class="bg-slate-50 w-full p-5 md:p-10 rounded-md mb-4">
+        <div id="form" class="bg-white w-full p-5 md:p-10 rounded-2xl mb-4">
           <div id="form-hd">
             <h1
               class="text-lg font-semibold border-b-4 border-slate-800 w-fit mb-5"

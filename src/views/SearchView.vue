@@ -56,7 +56,7 @@ onMounted(() => {
 <template>
   <section class="mb-9 mx-2 md:mx-32 flex-1">
     <div class="min-h-screen py-5 md:py-12">
-      <div class="mx-auto w-full bg-white rounded-lg md:py-8">
+      <div class="mx-auto w-full rounded-lg md:py-8">
         <div class="text-center mb-6">
           <h1 class="text-xl font-bold text-gray-800">Search Results</h1>
           <p class="text-gray-500 mt-2">

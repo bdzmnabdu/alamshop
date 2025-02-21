@@ -30,14 +30,6 @@ const router = createRouter({
     {
       path: "/logistics",
       component: () => import("@/views/LogisticsView.vue"),
-      beforeEnter: async (_to, _from, next) => {
-        const token = TokenService.getToken();
-        if (token && (await TokenService.verifyToken(token))) {
-          next();
-        } else {
-          next("/");
-        }
-      },
     },
     {
       path: "/checkout/success",

@@ -38,7 +38,7 @@ const { isLoading, isError, products } = useProducts(
 );
 
 const cols = computed(() =>
-  catId.value ? "md:grid-cols-4" : "md:grid-cols-5"
+  catId.value ? "md:grid-cols-4" : "md:grid-cols-5 2xl:grid-cols-6"
 );
 
 const currentPageFn = (page: number) => {
@@ -101,7 +101,7 @@ watch([catId, waterType], updatePage, { deep: true });
       </Pagination>
     </div>
   </div>
-  <secion
+  <section
     v-if="
       !isLoading && !isError && (!products || products.itemsprd.length === 0)
     "
@@ -119,5 +119,5 @@ watch([catId, waterType], updatePage, { deep: true });
       class="mb-3"
     />
     <p class="text-base font-medium text-slate-600">No products found</p>
-  </secion>
+  </section>
 </template>

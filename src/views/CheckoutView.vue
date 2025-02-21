@@ -346,7 +346,7 @@ const onSubmit = async () => {
       <p class="text-sm hover:underline text-orange-900">Back</p>
     </RouterLink>
     <div class="md:flex md:gap-4 relative w-full m-0">
-      <div id="form" class="bg-slate-50 md:w-3/4 p-5 md:p-10 rounded-2xl mb-4">
+      <div id="form" class="bg-white md:w-3/5 p-5 md:p-10 rounded-2xl mb-4">
         <div id="form-hd">
           <h1
             class="text-lg font-semibold border-b-4 border-slate-800 w-fit mb-5"
@@ -990,14 +990,14 @@ const onSubmit = async () => {
       </div>
       <div
         id="item-ckt"
-        class="bg-slate-50 md:w-1/4 rounded-2xl p-3 max-h-96 md:sticky md:top-20"
+        class="bg-white md:w-2/5 rounded-2xl p-3 h-fit md:sticky md:top-20"
       >
         <h2 class="border-b-2 border-slate-800 w-fit mb-5">Your Items</h2>
-        <div id="cart" class="w-full h-[330px] md:h-[470px]">
+        <div id="cart" class="w-full h-fit">
           <div
             v-for="item in cartStore.state.cart"
             :key="item.product_id"
-            class="flex items-center gap-2 border rounded-xl my-2 p-3 bg-white"
+            class="flex items-center gap-2 border rounded-xl my-2 p-2 bg-white"
           >
             <div
               id="img-itm"
@@ -1009,6 +1009,9 @@ const onSubmit = async () => {
               <p class="font-normal text-sm">
                 {{ item.product_name }}
               </p>
+              <p class="font-normal text-sm">
+                {{ item.cond }}
+              </p>
               <div class="flex justify-between items-center">
                 <div id="act" class="flex items-center justify-between w-full">
                   <p class="text-xs">{{ item.quantity }} {{ item.uom }}</p>
@@ -1016,6 +1019,15 @@ const onSubmit = async () => {
               </div>
             </div>
           </div>
+          <hr class="my-5" />
+          <RouterLink to="/products/fishery/aof">
+            <button
+              class="flex justify-center items-center gap-2 text-sm text-slate-600 border-2 border-dashed border-slate-300 rounded-xl p-2 w-full bg-slate-50 shadow-none hover:bg-non"
+            >
+              <i class="pi pi-cart-plus" style="font-size: 1.2rem"></i>
+              <p>Add item</p>
+            </button>
+          </RouterLink>
         </div>
       </div>
     </div>
