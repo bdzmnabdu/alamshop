@@ -87,14 +87,3 @@
     display: none;
   }
 }
-
-input[type="search"]::-webkit-search-cancel-button {
-  //appearance: none; /* Menghilangkan ikon "X" */
-}
-/* html,
-body,
-#app {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-} */

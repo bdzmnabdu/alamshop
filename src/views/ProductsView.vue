@@ -22,7 +22,6 @@ const accordionItems = [
   },
 ];
 
-// Variabel filter yang dipilih
 const selectedCategory = ref<string | undefined>(undefined);
 
 const updateURL = () => {
@@ -64,7 +63,6 @@ onMounted(() => {
       >
         <div id="acc">
           <div class="w-full">
-            <!-- Kategori (Radio Group) -->
             <div>
               <h3 class="text-base font-medium mb-3">Categories</h3>
               <div>

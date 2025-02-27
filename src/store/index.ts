@@ -1,24 +1,7 @@
 import { defineStore } from "pinia";
 import { reactive, computed } from "vue";
+import type { Product, CartItem } from "@/types";
 
-type Product = {
-  product_id: string;
-  product_name: string;
-  catid: string;
-  product_type: string;
-  uom: string;
-  description: string | null;
-  createdinfo: string;
-  modifiedinfo: string | null;
-  cat_name: string;
-  name_type: string;
-  image_url: string;
-};
-
-export type CartItem = Product & {
-  quantity: number;
-  cond: string;
-};
 export const useCartStore = defineStore("cart", () => {
   const state = reactive<{ cart: CartItem[] }>({
     cart: [],

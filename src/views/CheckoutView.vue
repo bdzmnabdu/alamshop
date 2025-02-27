@@ -38,6 +38,7 @@ import useSkaCoo from "@/composables/useSkaCoo";
 import { TokenService } from "@/services/TokenService";
 import useProductsLogistic from "@/composables/useProductsLogistic";
 import useNoWA from "@/composables/useNoWA";
+import type { CartItem, Dimensi } from "@/types";
 
 const router = useRouter();
 
@@ -93,30 +94,6 @@ interface FormLogistik {
   negaraAsalImportir: string;
   insurance: string;
 }
-
-type Product = {
-  product_id: string;
-  product_name: string;
-  catid: string;
-  product_type: string;
-  uom: string;
-  description: string | null;
-  createdinfo: string;
-  modifiedinfo: string | null;
-  cat_name: string;
-  name_type: string;
-  image_url: string;
-};
-
-type CartItem = Product & {
-  quantity: number;
-};
-
-type Dimensi = {
-  panjang: number;
-  lebar: number;
-  tinggi: number;
-};
 
 const form = reactive<{
   dataTrading: FormTrading;

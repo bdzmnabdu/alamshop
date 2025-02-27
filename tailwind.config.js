@@ -93,4 +93,5 @@ module.exports = {
     },
   },
   plugins: [animate],
+  safelist: ["font-sans"],
 };

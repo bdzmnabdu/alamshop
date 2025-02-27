@@ -30,6 +30,7 @@ import { Calendar as CalendarIcon } from "lucide-vue-next";
 import useHSCode from "@/composables/useHSCode";
 import useCities from "@/composables/useCities";
 import usePack from "@/composables/usePack";
+import type { Dimensi } from "@/types";
 
 interface Trading {
   formId?: string;
@@ -46,12 +47,6 @@ interface Trading {
   orderdate: string;
   metodelogistik: string;
 }
-
-type Dimensi = {
-  panjang: number;
-  lebar: number;
-  tinggi: number;
-};
 
 defineProps<{
   dataTrading: Trading;
@@ -413,7 +408,6 @@ watch(
               >
                 {{ pck.description ?? pck.product_name }}
               </SelectItem>
-              <!-- <SelectItem value="box"> Box Styrofoam </SelectItem> -->
             </SelectGroup>
           </SelectContent>
         </Select>

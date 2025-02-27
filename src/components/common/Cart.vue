@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { useCartStore } from "@/store";
 import { useRouter } from "vue-router";
+import { useCartStore } from "@/store";
 import { TokenService } from "@/services/TokenService";
 import { Button } from "@/components/ui/button";
 import {
