@@ -15,7 +15,7 @@ type Product = {
   image_url: string;
 };
 
-type CartItem = Product & {
+export type CartItem = Product & {
   quantity: number;
   cond: string;
 };

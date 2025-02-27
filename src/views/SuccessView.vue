@@ -14,14 +14,16 @@ if (!token && !TokenService.verifyToken(token as string)) {
   <section
     class="text-center flex flex-col justify-center items-center mb-9 mx-2 md:mx-32 flex-1"
   >
-    <DotLottieVue
-      style="height: 500px; width: 500px"
-      autoplay
-      loop
-      src="https://lottie.host/855a7d3c-1f13-4e78-a351-9b32702624f4/S6AzNI7BNr.lottie"
-      class="-mt-20"
-    />
-    <div class="-mt-28">
+    <div class="w-[370px] md:w-[500px] h-auto overflow-hidden">
+      <DotLottieVue
+        id="scs-anm"
+        autoplay
+        loop
+        src="https://lottie.host/855a7d3c-1f13-4e78-a351-9b32702624f4/S6AzNI7BNr.lottie"
+        class="-mt-16 w-[370px] h-[370px] md:w-[500px] wd:h-[500px]"
+      />
+    </div>
+    <div class="-mt-14">
       <h1 class="text-4xl font-bold mb-4">Success</h1>
       <p class="text-lg text-slate-600 mb-5">
         Thank you for visiting our page!

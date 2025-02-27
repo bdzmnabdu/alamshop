@@ -4,35 +4,37 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useCartStore } from "@/store";
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import {
-  NumberField,
-  NumberFieldContent,
-  NumberFieldDecrement,
-  NumberFieldIncrement,
-  NumberFieldInput,
-} from "@/components/ui/number-field";
+// import {
+//   Sheet,
+//   SheetClose,
+//   SheetContent,
+//   SheetDescription,
+//   SheetFooter,
+//   SheetHeader,
+//   SheetTitle,
+//   SheetTrigger,
+// } from "@/components/ui/sheet";
+// import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+// import {
+//   NumberField,
+//   NumberFieldContent,
+//   NumberFieldDecrement,
+//   NumberFieldIncrement,
+//   NumberFieldInput,
+// } from "@/components/ui/number-field";
 import { onMounted, ref } from "vue";
-import { TokenService } from "@/services/TokenService";
+import Cart from "../common/Cart.vue";
+// import { TokenService } from "@/services/TokenService";
+// import Cart from "@/common/Cart.vue";
 
 const router = useRouter();
 const query = ref<string>("");
 
-const generateToken = () => {
-  const token = TokenService.getToken();
-  if (!token) TokenService.generateToken();
-  router.push("/checkout");
-};
+// const generateToken = () => {
+//   const token = TokenService.getToken();
+//   if (!token) TokenService.generateToken();
+//   router.push("/checkout");
+// };
 
 const sideSheet = ref<"bottom" | "right">("bottom");
 onMounted(() => {
@@ -45,12 +47,12 @@ onMounted(() => {
 
 const cartStore = useCartStore();
 
-const reduceQty = (productId: string, cond: string) => {
-  cartStore.reduceFromCart(productId, cond);
-};
-const handleDeleteCart = (productId: string, cond: string) => {
-  cartStore.removeFromCart(productId, cond);
-};
+// const reduceQty = (productId: string, cond: string) => {
+//   cartStore.reduceFromCart(productId, cond);
+// };
+// const handleDeleteCart = (productId: string, cond: string) => {
+//   cartStore.removeFromCart(productId, cond);
+// };
 
 const handleSearch = () => {
   console.log(query.value);
@@ -82,7 +84,7 @@ const handleSearch = () => {
       >
         <Input
           id="search"
-          type="text"
+          type="search"
           placeholder="Search..."
           class="pl-8 h-9 w-full"
           @change="handleSearch"
@@ -93,12 +95,27 @@ const handleSearch = () => {
         >
           <i class="pi pi-search" style="font-size: 0.9rem"></i>
         </span>
+        <!-- <button
+          class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+        >
+          ✖
+        </button> -->
       </div>
       <div
         id="cart"
         class="order-3 grid grid-cols-[auto_auto] items-center justify-self-end"
       >
-        <Sheet>
+        <Cart :sideSheet="sideSheet" :cartStore="cartStore">
+          <template #navcart>
+            <div class="relative p-3 leading-3 cursor-pointer">
+              <i class="pi pi-shopping-cart" style="font-size: 1.2rem"></i>
+              <div class="absolute top-0 right-0">
+                <Badge class="text-xs h-3 p-2">{{ cartStore.itemCount }}</Badge>
+              </div>
+            </div>
+          </template>
+        </Cart>
+        <!-- <Sheet>
           <SheetTrigger asChild>
             <div class="relative p-3 leading-3 cursor-pointer">
               <i class="pi pi-shopping-cart" style="font-size: 1.2rem"></i>
@@ -220,7 +237,7 @@ const handleSearch = () => {
               </div>
             </div>
           </SheetContent>
-        </Sheet>
+        </Sheet> -->
       </div>
 
       <div

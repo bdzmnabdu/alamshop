@@ -37,7 +37,7 @@ const { isLoading, isError, products } = useProducts(
 );
 
 const cols = computed(() =>
-  catId.value ? "md:grid-cols-4" : "md:grid-cols-5 2xl:grid-cols-6"
+  catId.value ? "md:grid-cols-4" : "md:grid-cols-5"
 );
 
 const currentPageFn = (page: number) => {

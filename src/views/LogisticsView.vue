@@ -33,24 +33,14 @@ import useCities from "@/composables/useCities";
 import { postQuoLog } from "@/api";
 import { useRouter } from "vue-router";
 import useSkaCoo from "@/composables/useSkaCoo";
-// import { TokenService } from "@/services/TokenService";
+import useProductsLogistic from "@/composables/useProductsLogistic";
+import useNoWA from "@/composables/useNoWA";
 
 const router = useRouter();
 
-// const token = TokenService.getToken();
-// if (!token && !TokenService.verifyToken(token as string)) {
-//   router.push("/");
-// }
-
-// const removeToken = () => {
-//   TokenService.removeToken();
-// };
-
 interface FormLogistik {
   formId?: string;
-  jenisTransportasi: string;
   ekspedisi: string;
-  category: string;
   incoterm: string;
   komoditi?: string;
   hscode?: string;
@@ -81,9 +71,7 @@ const form = reactive<{
 }>({
   dataLogistik: {
     formId: "log",
-    jenisTransportasi: "",
     ekspedisi: "",
-    category: "",
     incoterm: "",
     komoditi: "",
     hscode: "",
@@ -113,9 +101,11 @@ const isCheckedEksportir = ref(false);
 const isCheckedImportir = ref(false);
 
 const srcVal = ref("");
+const { productsLogistic } = useProductsLogistic();
 const { isLoading, hscodes, refetch } = useHSCode(srcVal);
 const { cities } = useCities();
 const { govreg } = useSkaCoo();
+const { nowa } = useNoWA();
 
 const searcHSC = (event: any) => {
   srcVal.value = event.target.value;
@@ -188,9 +178,7 @@ const onSubmit = async () => {
 
   const dataLog: FormLogistik = {
     formId: form.dataLogistik.formId,
-    jenisTransportasi: form.dataLogistik.jenisTransportasi,
     ekspedisi: form.dataLogistik.ekspedisi,
-    category: form.dataLogistik.category,
     incoterm: form.dataLogistik.incoterm,
     komoditi: form.dataLogistik.komoditi,
     hscode: form.dataLogistik.hscode,
@@ -220,18 +208,19 @@ const onSubmit = async () => {
   };
 
   console.log(formDataLog);
+  // console.log(nowa.value.nowa);
   try {
     const response = await postQuoLog(formDataLog);
     console.log("Success:", response);
     if (response.status === 200) {
       router.push("/checkout/success");
-      const phoneNumber = "628983224705"; // Nomor tujuan WhatsApp
+
+      const phoneNumber = nowa.value.nowa ?? "628983224705"; // Nomor tujuan WhatsApp
+
       const message = [
         `Halo, saya ${formDataLog.pengirim}.`,
         "",
-        `Transportation Type: ${formDataLog.jenisTransportasi}`,
         `Expedition Service: ${formDataLog.ekspedisi}`,
-        `Shipping Scope: ${formDataLog.category}`,
         `Incoterm: ${formDataLog.incoterm}`,
         `Commodity: ${formDataLog.komoditi}`,
         `HS Code: ${formDataLog.hscode}`,
@@ -294,67 +283,21 @@ const onSubmit = async () => {
               <div id="form-logistik" class="flex flex-col gap-5">
                 <div id="jenis-transportasi">
                   <label class="text-sm font-normal text-slate-700 mb-1"
-                    >Transportation Type
-                    <span class="text-red-500 font-semibold">*</span></label
-                  >
-                  <Select
-                    v-model="form.dataLogistik.jenisTransportasi"
-                    required
-                  >
-                    <SelectTrigger class="w-full">
-                      <SelectValue placeholder="Select transportation type" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectItem value="air">Air</SelectItem>
-                        <SelectItem value="sea">Sea </SelectItem>
-                        <SelectItem value="land">Land </SelectItem>
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div id="ekspedisi">
-                  <label class="text-sm font-normal text-slate-700 mb-1"
                     >Expedition Service
                     <span class="text-red-500 font-semibold">*</span></label
                   >
                   <Select v-model="form.dataLogistik.ekspedisi" required>
                     <SelectTrigger class="w-full">
-                      <SelectValue placeholder="Select expedition service" />
+                      <SelectValue placeholder="Select Expedition Service" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectGroup>
-                        <SelectItem value="DOOR TO DOOR"
-                          >DOOR TO DOOR</SelectItem
+                        <SelectItem
+                          v-for="(lg, i) in productsLogistic"
+                          :key="i"
+                          :value="lg.product_id"
+                          >{{ lg.product_name }}</SelectItem
                         >
-                        <SelectItem value="DOOR TO PORT"
-                          >DOOR TO PORT</SelectItem
-                        >
-                        <SelectItem value="PORT TO DOOR"
-                          >PORT TO DOOR</SelectItem
-                        >
-                        <SelectItem value="PORT TO PORT"
-                          >PORT TO PORT</SelectItem
-                        >
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div id="cat-transportasi">
-                  <label class="text-sm font-normal text-slate-700 mb-1"
-                    >Shipping Scope
-                    <span class="text-red-500 font-semibold">*</span></label
-                  >
-                  <Select v-model="form.dataLogistik.category" required>
-                    <SelectTrigger class="w-full">
-                      <SelectValue placeholder="e.g. Domestic" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectItem value="domestic">Domestic </SelectItem>
-                        <SelectItem value="international"
-                          >International
-                        </SelectItem>
                       </SelectGroup>
                     </SelectContent>
                   </Select>
@@ -543,7 +486,7 @@ const onSubmit = async () => {
                     >
                     <Popover>
                       <PopoverTrigger as-child>
-                        <div class="relative">
+                        <div class="relative flex justify-center items-center">
                           <Input
                             type="text"
                             placeholder="e.g. Jakarta - Halim Perdana Kusuma - HLP"
@@ -553,7 +496,7 @@ const onSubmit = async () => {
                             required
                           />
                           <ChevronsUpDown
-                            class="ml-2 h-4 w-4 shrink-0 opacity-50 absolute right-2 top-2.5"
+                            class="ml-2 h-4 w-4 shrink-0 opacity-50 absolute right-2"
                           />
                         </div>
                       </PopoverTrigger>

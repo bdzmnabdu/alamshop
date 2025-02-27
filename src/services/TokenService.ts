@@ -10,7 +10,7 @@ export const TokenService = {
       .sign(SECRET_KEY);
 
     sessionStorage.setItem("jwt", token);
-    // return token;
+    return token;
   },
 
   async verifyToken(token: string) {

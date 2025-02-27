@@ -1,24 +1,24 @@
 <script setup lang="ts">
 import { ref, defineProps, onMounted } from "vue";
-import { Button } from "@/components/ui/button";
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import {
-  NumberField,
-  NumberFieldContent,
-  NumberFieldDecrement,
-  NumberFieldIncrement,
-  NumberFieldInput,
-} from "@/components/ui/number-field";
+// import { Button } from "@/components/ui/button";
+// import {
+//   Sheet,
+//   SheetClose,
+//   SheetContent,
+//   SheetDescription,
+//   SheetFooter,
+//   SheetHeader,
+//   SheetTitle,
+//   SheetTrigger,
+// } from "@/components/ui/sheet";
+// import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+// import {
+//   NumberField,
+//   NumberFieldContent,
+//   NumberFieldDecrement,
+//   NumberFieldIncrement,
+//   NumberFieldInput,
+// } from "@/components/ui/number-field";
 import { useCartStore } from "@/store";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -30,37 +30,39 @@ import {
 import RadioForm from "@/components/common/RadioForm.vue";
 import { TokenService } from "@/services/TokenService";
 import { RouterLink, useRouter } from "vue-router";
+import type { CartItem } from "@/store";
+import Cart from "./Cart.vue";
 
-type Product = {
-  product_id: string;
-  product_name: string;
-  catid: string;
-  product_type: string;
-  uom: string;
-  description: string | null;
-  createdinfo: string;
-  modifiedinfo: string | null;
-  cat_name: string;
-  name_type: string;
-  image_url: string;
-};
+// type Product = {
+//   product_id: string;
+//   product_name: string;
+//   catid: string;
+//   product_type: string;
+//   uom: string;
+//   description: string | null;
+//   createdinfo: string;
+//   modifiedinfo: string | null;
+//   cat_name: string;
+//   name_type: string;
+//   image_url: string;
+// };
 
-type CartItem = Product & {
-  quantity: number;
-  cond: string;
-};
+// type CartItem = Product & {
+//   quantity: number;
+//   cond: string;
+// };
 
-const router = useRouter();
+// const router = useRouter();
 const props = defineProps<{ product: CartItem }>();
 
 const cartStore = useCartStore();
 
-const generateToken = () => {
-  const token = TokenService.getToken();
-  if (token) return;
-  TokenService.generateToken();
-  router.push("/checkout");
-};
+// const generateToken = () => {
+//   const token = TokenService.getToken();
+//   if (token) return;
+//   TokenService.generateToken();
+//   router.push("/checkout");
+// };
 
 const bdgProduct = (prd: string) => {
   prd = prd.split("-")[0];
@@ -96,13 +98,13 @@ const handleAddToCart = () => {
   cartStore.addToCart(props.product, selectedOption.value);
 };
 
-const reduceQty = (productId: string, cond: string) => {
-  cartStore.reduceFromCart(productId, cond);
-};
+// const reduceQty = (productId: string, cond: string) => {
+//   cartStore.reduceFromCart(productId, cond);
+// };
 
-const handleDeleteCart = (productId: string, cond: string) => {
-  cartStore.removeFromCart(productId, cond);
-};
+// const handleDeleteCart = (productId: string, cond: string) => {
+//   cartStore.removeFromCart(productId, cond);
+// };
 </script>
 
 <template>
@@ -111,15 +113,13 @@ const handleDeleteCart = (productId: string, cond: string) => {
       <DialogTrigger class="text-left">
         <div class="flex-1 flex flex-col">
           <div
-            class="h-40 object-cover overflow-clip bg-white rounded-2xl hover:border-2 hover:border-slate-200"
+            class="h-40 2xl:h-50 object-cover overflow-clip bg-white rounded-2xl hover:border-2 hover:border-slate-200 w-full flex items-center justify-center"
           >
             <img
               v-if="product?.image_url"
               :src="product?.image_url"
               alt=""
-              width="150"
-              height="150"
-              class="w-full object-cover"
+              class="w-40 h-40 2xl:w-50 2xl:h-50 object-cover"
             />
             <div
               v-else
@@ -146,13 +146,13 @@ const handleDeleteCart = (productId: string, cond: string) => {
       <DialogContent class="h-fit w-[330px] md:w-[450px] rounded-2xl">
         <div class="flex-1 flex flex-col">
           <div
-            class="h-fit max-h-64 object-cover overflow-clip bg-white rounded-2xl"
+            class="h-60 2xl:h-70 object-cover overflow-clip bg-white rounded-2xl w-full flex items-center justify-center"
           >
             <img
               v-if="product?.image_url"
               :src="product?.image_url"
               alt=""
-              class="w-full"
+              class="w-60 h-60 2xl:w-70 2xl:h-70 object-cover"
             />
             <div
               v-else
@@ -188,7 +188,22 @@ const handleDeleteCart = (productId: string, cond: string) => {
           <div id="card-content" class="p-2">
             <div id="btn-act" class="w-full">
               <div id="dtl-prd" class="flex justify-between items-center gap-2">
-                <Sheet>
+                <Cart
+                  :selected-option="selectedOption"
+                  :side-sheet="sideSheet"
+                  :cart-store="cartStore"
+                >
+                  <template #prdcart>
+                    <div
+                      size="icon"
+                      @click.prevent="handleAddToCart"
+                      class="w-full rounded-xl text-sm bg-orange-500 hover:bg-orange-200 text-white hover:text-orange-900 py-2 px-3 cursor-pointer text-center"
+                    >
+                      Add to cart
+                    </div>
+                  </template>
+                </Cart>
+                <!-- <Sheet>
                   <SheetTrigger asChild v-if="selectedOption">
                     <div
                       size="icon"
@@ -336,7 +351,7 @@ const handleDeleteCart = (productId: string, cond: string) => {
                       </div>
                     </div>
                   </SheetContent>
-                </Sheet>
+                </Sheet> -->
               </div>
             </div>
           </div>
