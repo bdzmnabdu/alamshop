@@ -337,9 +337,13 @@ const onSubmit = async () => {
             ? "With alam logistic"
             : "Already has its own logistic"
         }`,
-        `Logistics Data:\n${Object.entries(dataLog)
-          .map(([key, value]) => `  - ${key}: ${value}`)
-          .join("\n")}`,
+        `Logistics Data:\n${
+          formDataQuo.metodelogistik === "alamlog"
+            ? Object.entries(dataLog)
+                .map(([key, value]) => `  - ${key}: ${value}`)
+                .join("\n")
+            : ""
+        }`,
         `Cart:\n${formDataQuo.cart
           .map(
             (item: CartItem) =>
