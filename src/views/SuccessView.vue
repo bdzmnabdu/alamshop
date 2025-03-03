@@ -1,14 +1,11 @@
 <script setup lang="ts">
 import { DotLottieVue } from "@lottiefiles/dotlottie-vue";
 import { TokenService } from "@/services/TokenService";
-import { useRouter } from "vue-router";
+import { onBeforeUnmount } from "vue";
 
-const router = useRouter();
-
-const token = TokenService.getToken();
-if (!token && !TokenService.verifyToken(token as string)) {
-  router.push("/");
-}
+onBeforeUnmount(() => {
+  TokenService.removeToken();
+});
 </script>
 <template>
   <section

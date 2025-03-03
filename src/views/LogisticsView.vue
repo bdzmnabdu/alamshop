@@ -207,20 +207,26 @@ const onSubmit = async () => {
     ...dataLog,
   };
 
-  console.log(formDataLog);
-  // console.log(nowa.value.nowa);
+  // console.log(formDataLog);
   try {
     const response = await postQuoLog(formDataLog);
     console.log("Success:", response);
     if (response.status === 200) {
       router.push("/checkout/success");
 
-      const phoneNumber = nowa.value.nowa ?? "628983224705"; // Nomor tujuan WhatsApp
+      const phoneNumber: string = nowa.value.nowa ?? "628983224705"; // Nomor tujuan WhatsApp
 
-      const message = [
-        `Halo, saya ${formDataLog.pengirim}.`,
+      const message: string = [
+        `Halo, saya ${formDataLog.pengirim}. Saya pesan layanan logistik dengan detail sebagai berikut:`,
         "",
-        `Expedition Service: ${formDataLog.ekspedisi}`,
+        `Expedition Service: ${
+          formDataLog.ekspedisi
+            ? productsLogistic.value.find(
+                (bx: { [key: string]: string }) =>
+                  bx.product_id === formDataLog.ekspedisi
+              )?.product_name
+            : ""
+        }`,
         `Incoterm: ${formDataLog.incoterm}`,
         `Commodity: ${formDataLog.komoditi}`,
         `HS Code: ${formDataLog.hscode}`,
@@ -243,9 +249,9 @@ const onSubmit = async () => {
         `Importer Name: ${formDataLog.namaImportir}`,
         `Importer's City : ${formDataLog.alamatImportir}`,
         `Importer's Country : ${formDataLog.negaraAsalImportir}`,
-        `Insurance: ${formDataLog.insurance}`,
+        `Insurance: ${formDataLog.insurance ? "Yes" : "No"}`,
       ].join("\n");
-      const waUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
+      const waUrl: string = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
         message
       )}`;
       // Redirect ke WhatsApp
@@ -280,7 +286,7 @@ const onSubmit = async () => {
           </div>
           <div id="form-dt" class="mt-5">
             <form @submit.prevent="onSubmit" class="flex flex-col gap-5">
-              <div id="form-logistik" class="flex flex-col gap-5">
+              <div id="form-logistik" class="flex flex-col gap-7">
                 <div id="jenis-transportasi">
                   <label class="text-sm font-normal text-slate-700 mb-1"
                     >Expedition Service
@@ -352,7 +358,6 @@ const onSubmit = async () => {
                           role="combobox"
                           :class="cn('justify-between')"
                           v-model="form.dataLogistik.hscode"
-                          required
                         />
                         <ChevronsUpDown
                           class="ml-2 h-4 w-4 shrink-0 opacity-50 absolute right-2"
@@ -576,7 +581,7 @@ const onSubmit = async () => {
                 >
                   <div class="space-y-0.5">
                     <label class="text-base"> Exporter Data </label>
-                    <p class="text-xs text-slate-700">
+                    <p class="text-xs md:text-sm text-slate-700">
                       Is Exporter Data the same as Shipper Data?
                     </p>
                   </div>
@@ -785,8 +790,7 @@ const onSubmit = async () => {
                 <div id="skacoo" class="flex flex-col">
                   <label class="text-sm font-normal text-slate-700 mb-1"
                     >SKA/COO
-                    <span class="text-red-500 font-semibold">*</span></label
-                  >
+                  </label>
                   <Popover>
                     <PopoverTrigger as-child>
                       <div class="relative flex justify-center items-center">
@@ -796,7 +800,6 @@ const onSubmit = async () => {
                           role="combobox"
                           :class="cn('justify-between')"
                           :value="form.dataLogistik.skacoo ? govreg.find((gvr: any) => gvr.govreg === form.dataLogistik.skacoo)?.govreg: 'Select SKA/COO...'"
-                          required
                         />
                         <ChevronsUpDown
                           class="ml-2 h-4 w-4 shrink-0 opacity-50 absolute right-2"
@@ -847,7 +850,7 @@ const onSubmit = async () => {
                 >
                   <div class="space-y-0.5">
                     <label class="text-base">Importer Data </label>
-                    <p class="text-xs text-slate-700">
+                    <p class="text-xs md:text-sm text-slate-700">
                       Is Importer Data the same as Recipient Data?
                     </p>
                   </div>

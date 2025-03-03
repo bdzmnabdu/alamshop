@@ -39,6 +39,7 @@ import { TokenService } from "@/services/TokenService";
 import useProductsLogistic from "@/composables/useProductsLogistic";
 import useNoWA from "@/composables/useNoWA";
 import type { CartItem, Dimensi } from "@/types";
+import usePack from "@/composables/usePack";
 
 const router = useRouter();
 
@@ -46,10 +47,6 @@ const token = TokenService.getToken();
 if (!token && !TokenService.verifyToken(token as string)) {
   router.push("/");
 }
-
-const removeToken = () => {
-  TokenService.removeToken();
-};
 
 interface FormTrading {
   formId?: string;
@@ -157,6 +154,8 @@ const { cities } = useCities();
 const { govreg } = useSkaCoo();
 const { productsLogistic } = useProductsLogistic();
 const { nowa } = useNoWA();
+const { pack } = usePack();
+
 const cartStore = useCartStore();
 form.cart = cartStore.state.cart;
 
@@ -238,7 +237,7 @@ const onSubmit = async () => {
     "certificate-cl"
   ) as HTMLInputElement | null;
 
-  const dataLog = {
+  const dataLog: FormLogistik = {
     formId: form.dataLogistik.formId,
     ekspedisi: form.dataLogistik.ekspedisi,
     incoterm: form.dataLogistik.incoterm,
@@ -265,7 +264,7 @@ const onSubmit = async () => {
     negaraAsalImportir: form.dataLogistik.negaraAsalImportir,
     insurance: form.dataLogistik.insurance,
   };
-  const formDataQuo = {
+  const formDataQuo: { [key: string]: any } = {
     ...form.dataTrading,
     dtLog: form.dataTrading.metodelogistik === "alamlog" ? dataLog : "",
     cart: [...form.cart],
@@ -279,33 +278,81 @@ const onSubmit = async () => {
       isSubmitted.value = true;
       cartStore.clearCart();
       router.push("/checkout/success");
-      const phoneNumber = nowa.value.nowa ?? "628983224705"; // Nomor tujuan WhatsApp
-      const message = [
-        `Halo, saya ${formDataQuo.pemesan}.`,
+      const phoneNumber: string = nowa.value.nowa ?? "628983224705"; // Nomor tujuan WhatsApp
+
+      const dataLog: { [key: string]: string | undefined } = {
+        "Expedition Service": formDataQuo.dtLog.ekspedisi
+          ? productsLogistic.value.find(
+              (bx: { [key: string]: string }) =>
+                bx.product_id === formDataQuo.dtLog.ekspedisi
+            )?.product_name
+          : "",
+        Incoterm: formDataQuo.dtLog.incoterm,
+        Commodity: formDataQuo.dtLog.komoditi,
+        Weight: formDataQuo.dtLog.weight,
+        "Total Packages": formDataQuo.dtLog.jmlKemasan,
+        Sender: formDataQuo.dtLog.pengirim,
+        "No Hp/Telp": formDataQuo.dtLog.nohppengirim,
+        "KTP/NPWP": formDataQuo.dtLog.ktpnpwpPengirim,
+        "Origin City": formDataQuo.dtLog.alamatPengirim,
+        "Origin Country": formDataQuo.dtLog.negaraAsalPengirim,
+        "Company Legality Certificate": formDataQuo.dtLog.legalitasPT
+          ? fileInput?.files?.[0].name
+          : "",
+        "Exporter Name": formDataQuo.dtLog.namaEksportir,
+        "KTP/NPWP Eksportir": formDataQuo.dtLog.ktpnpwpEksportir,
+        "Origin City Eksportir": formDataQuo.dtLog.alamatEksportir,
+        "Origin Country Eksportir": formDataQuo.dtLog.negaraAsalEksportir,
+        Recipient: formDataQuo.dtLog.namaPenerima,
+        "Destination City": formDataQuo.dtLog.alamatPenerima,
+        "Destination Country": formDataQuo.dtLog.negaraAsalPenerima,
+        "SKA/COO": formDataQuo.dtLog.skacoo,
+        "Importer Name": formDataQuo.dtLog.namaImportir,
+        "Importer's City": formDataQuo.dtLog.alamatImportir,
+        "Importer's Country": formDataQuo.dtLog.negaraAsalImportir,
+        Insurance: formDataQuo.dtLog.insurance ? "Yes" : "No",
+      };
+      // console.log(dataLog);
+
+      const message: string = [
+        `Halo, saya ${formDataQuo.pemesan}. Saya pesan dengan detail sebagai berikut:`,
         "",
-        `hscode: ${formDataQuo.hscode}`,
+        `HSCode: ${formDataQuo.hscode}`,
         `Customer: ${formDataQuo.pemesan}`,
         `Origin City: ${formDataQuo.cityFrom}`,
         `Origin Country: ${formDataQuo.countryFrom}`,
         `Recipient : ${formDataQuo.penerima}`,
         `Destination City: ${formDataQuo.cityTo}`,
         `Destination Country: ${formDataQuo.countryTo}`,
-        `Type of packaging: ${formDataQuo.jeniskemasan}`,
-        `dimensi: ${JSON.stringify(formDataQuo.dimensi, null, 2)}`,
+        `Type of packaging: ${
+          formDataQuo.jeniskemasan
+            ? pack.value.find(
+                (p: any) => p.product_id === formDataQuo.jeniskemasan
+              )?.description
+            : ""
+        }`,
         `Order Date: ${formDataQuo.orderdate}`,
-        `Logistics: ${formDataQuo.metodelogistik}`,
-        `Logistics Data: ${JSON.stringify(formDataQuo.dtLog, null, 2)}`,
+        `Logistics: ${
+          formDataQuo.metodelogistik === "alamlog"
+            ? "With alam logistic"
+            : "Already has its own logistic"
+        }`,
+        `Logistics Data:\n${Object.entries(dataLog)
+          .map(([key, value]) => `  - ${key}: ${value}`)
+          .join("\n")}`,
         `Cart:\n${formDataQuo.cart
-          .map((item) => `  - ${item.product_id}: ${item.product_name}`)
+          .map(
+            (item: CartItem) =>
+              `  - ${item.product_name}\nKondisi: ${item.cond}\nQuantity: ${item.quantity}`
+          )
           .join("\n")}`,
       ].join("\n");
-      const waUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
+      const waUrl: string = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
         message
       )}`;
 
       window.open(waUrl, "_blank");
     }
-    removeToken();
   } catch (error) {
     throw error;
   }
@@ -331,15 +378,15 @@ const onSubmit = async () => {
           <p class="text-lg">Form Pre-Order Trading</p>
         </div>
         <div id="form-dt" class="mt-5">
-          <form @submit.prevent="onSubmit" class="flex flex-col gap-5">
-            <div id="form-trading" class="flex flex-col gap-5">
+          <form @submit.prevent="onSubmit" class="flex flex-col gap-7">
+            <div id="form-trading" class="flex flex-col gap-7">
               <FormTrading v-model:data-trading="form.dataTrading" />
             </div>
             <hr />
             <div
               v-if="form.dataTrading.metodelogistik == 'alamlog'"
               id="form-logistik"
-              class="flex flex-col gap-5"
+              class="flex flex-col gap-7"
             >
               <legend class="text-xl font-normal">Form ALams Logistik</legend>
               <div id="jenis-transportasi">
@@ -529,7 +576,7 @@ const onSubmit = async () => {
               >
                 <div class="space-y-0.5">
                   <label class="text-base"> Exporter Data </label>
-                  <p class="text-xs text-slate-700">
+                  <p class="text-xs md:text-sm text-slate-700">
                     Is Exporter Data the same as Shipper Data?
                   </p>
                 </div>
@@ -737,8 +784,7 @@ const onSubmit = async () => {
               <div id="skacoo" class="flex flex-col">
                 <label class="text-sm font-normal text-slate-700 mb-1"
                   >SKA/COO
-                  <span class="text-red-500 font-semibold">*</span></label
-                >
+                </label>
                 <Popover>
                   <PopoverTrigger as-child>
                     <div class="relative flex justify-center items-center">
@@ -748,7 +794,6 @@ const onSubmit = async () => {
                         role="combobox"
                         :class="cn('justify-between')"
                         :value="form.dataLogistik.skacoo ? govreg.find((gvr: any) => gvr.govreg === form.dataLogistik.skacoo)?.govreg: 'Select SKA/COO...'"
-                        required
                       />
                       <ChevronsUpDown
                         class="ml-2 h-4 w-4 shrink-0 opacity-50 absolute right-2"
@@ -799,7 +844,7 @@ const onSubmit = async () => {
               >
                 <div class="space-y-0.5">
                   <label class="text-base">Importer Data </label>
-                  <p class="text-xs text-slate-700">
+                  <p class="text-xs md:text-sm text-slate-700">
                     Is Importer Data the same as Recipient Data?
                   </p>
                 </div>
@@ -965,7 +1010,7 @@ const onSubmit = async () => {
               class="flex justify-center items-center gap-2 text-sm text-slate-600 border-2 border-dashed border-slate-300 rounded-xl p-2 w-full bg-slate-50 shadow-none hover:bg-non"
             >
               <i class="pi pi-cart-plus" style="font-size: 1.2rem"></i>
-              <p>Add item</p>
+              <p class="hover:underline">Add item</p>
             </button>
           </RouterLink>
         </div>

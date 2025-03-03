@@ -3,11 +3,6 @@ import type { Vars, Dataquo } from "@/types";
 
 const apicode = "ZCiU7Oc0cxlM2mic9rNQ";
 const workspace = "ALAMS";
-// type Vars = {
-//   page_num: number;
-//   catId?: string | undefined;
-//   waterType?: string | string[] | undefined;
-// };
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export const getAllProducts = async (
@@ -37,7 +32,6 @@ export const getProductsByKeyword = async (keyword: string, page: number) => {
       const encodeVars = encodeURIComponent(JSON.stringify(vars));
       const url = `${API_BASE_URL}/txn?fnc=runLib;opic=${apicode};csn=${workspace};rc=${servicecode};vars=${encodeVars}`;
       const res = await axios.get(url);
-      // console.log(res.data);
       return res.data;
     } else {
       return "";

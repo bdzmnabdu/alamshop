@@ -8,7 +8,7 @@
     </div>
     <div id="card-content" class="p-2 relative">
       <div class="w-full">
-        <div class="animate-pulse bg-slate-300 w-2/4 h-4 my-2 rounded-md"></div>
+        <div class="animate-pulse bg-slate-300 w-4/4 h-4 my-2 rounded-md"></div>
         <div class="animate-pulse bg-slate-300 w-2/4 h-4 my-2 rounded-md"></div>
       </div>
     </div>

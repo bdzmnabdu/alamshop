@@ -74,7 +74,7 @@ const form = reactive<Trading>({
   metodelogistik: "",
 });
 
-const srcVal = ref("");
+const srcVal = ref<string>("");
 const { isLoading, hscodes, refetch } = useHSCode(srcVal);
 const { cities } = useCities();
 const { pack } = usePack();

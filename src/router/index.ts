@@ -8,6 +8,10 @@ const router = createRouter({
       path: "/",
       name: "Home",
       component: () => import("@/views/HomeView.vue"),
+      beforeEnter: async (_to, from, next) => {
+        if (from.name === "Success") TokenService.removeToken();
+        next();
+      },
     },
     {
       path: "/products/fishery/:catId",
@@ -17,6 +21,7 @@ const router = createRouter({
     { path: "/search", component: () => import("@/views/SearchView.vue") },
     {
       path: "/checkout",
+      name: "Checkout",
       component: () => import("@/views/CheckoutView.vue"),
       beforeEnter: async (_to, _from, next) => {
         const token = TokenService.getToken();
@@ -29,22 +34,28 @@ const router = createRouter({
     },
     {
       path: "/logistics",
+      name: "Logistics",
       component: () => import("@/views/LogisticsView.vue"),
     },
     {
       path: "/checkout/success",
+      name: "Success",
       component: () => import("@/views/SuccessView.vue"),
-      beforeEnter: async (_to, _from, next) => {
+      beforeEnter: async (_to, from, next) => {
         const token = TokenService.getToken();
         if (token && (await TokenService.verifyToken(token))) {
           next();
         } else {
+          if (from.name === "Logistics") {
+            next();
+          }
           next("/");
         }
       },
     },
     {
       path: "/track-order",
+      name: "TrackOrder",
       component: () => import("@/views/TrackOrderView.vue"),
     },
   ],
