@@ -66,12 +66,11 @@ const onSubmit = () => {
                 <FormLabel>Your order number</FormLabel>
                 <FormControl>
                   <div class="flex justify-start items-center gap-2 w-full">
-                    <div class="relative">
+                    <div class="relative w-full md:w-[300px]">
                       <Input
                         type="search"
                         placeholder="e.g. 920-22149805"
                         v-model="query"
-                        class="w-full md:w-[300px]"
                         @keyup.enter="onSubmit"
                         @keydown.enter.prevent
                       />
