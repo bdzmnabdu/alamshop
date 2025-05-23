@@ -3,8 +3,6 @@ import { ref, reactive, watch } from "vue";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import useTrackOrder from "@/composables/useTrackOrder";
-import { toTypedSchema } from "@vee-validate/zod";
-import * as z from "zod";
 import {
   Form,
   FormControl,
@@ -23,16 +21,10 @@ interface ActionLog {
   remarks: string;
   status: string;
 }
-const formSchema = toTypedSchema(
-  z.object({
-    ordernum: z
-      .string()
-      .length(11, "Order number must be exactly 11 characters long."),
-  })
-);
 
 const ordernum = ref("");
 const nodes = reactive<ActionLog[]>([]);
+const query = ref<string>("");
 
 const { isLoading, data, refetch } = useTrackOrder(ordernum);
 watch(data, (newData) => {
@@ -55,8 +47,8 @@ watch(data, (newData) => {
   }
 });
 
-const onSubmit = (values: any) => {
-  ordernum.value = values.ordernum;
+const onSubmit = () => {
+  ordernum.value = query.value;
   refetch();
 };
 </script>
@@ -67,19 +59,30 @@ const onSubmit = (values: any) => {
         id="search-order"
         class="border border-slate-200 p-3 md:p-5 rounded-2xl w-full bg-white"
       >
-        <Form :validation-schema="formSchema" @submit="onSubmit">
+        <Form @submit="onSubmit">
           <div class="">
-            <FormField v-slot="{ field }" name="ordernum" class="">
+            <FormField name="ordernum" class="">
               <FormItem>
                 <FormLabel>Your order number</FormLabel>
                 <FormControl>
                   <div class="flex justify-start items-center gap-2 w-full">
-                    <Input
-                      type="text"
-                      placeholder="e.g. 45000000010"
-                      v-bind="field"
-                      class="w-full md:w-[300px]"
-                    />
+                    <div class="relative">
+                      <Input
+                        type="search"
+                        placeholder="e.g. 920-22149805"
+                        v-model="query"
+                        class="w-full md:w-[300px]"
+                        @keyup.enter="onSubmit"
+                        @keydown.enter.prevent
+                      />
+                      <button
+                        v-if="query"
+                        @click="query = ''"
+                        class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                      >
+                        ✖
+                      </button>
+                    </div>
                     <Button type="submit" class="h-11">
                       <i class="pi pi-search" style="font-size: 0.9rem"></i>
                     </Button>
@@ -175,3 +178,8 @@ const onSubmit = (values: any) => {
     </div>
   </section>
 </template>
+<style lang="css" scoped>
+input[type="search"]::-webkit-search-cancel-button {
+  appearance: none;
+}
+</style>

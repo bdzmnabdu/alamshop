@@ -22,7 +22,7 @@ onMounted(() => {
 const cartStore = useCartStore();
 
 const handleSearch = () => {
-  console.log(query.value);
+  // console.log(query.value);
   if (query.value) {
     router.push({
       path: "/search",
@@ -54,7 +54,7 @@ const handleSearch = () => {
           type="search"
           placeholder="Search..."
           class="pl-8 h-9 w-full"
-          @change="handleSearch"
+          @keyup.enter="handleSearch"
           v-model="query"
         />
         <span
