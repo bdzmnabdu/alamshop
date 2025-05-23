@@ -16,7 +16,6 @@ export const getAllProducts = async (
     const encodeVars = encodeURIComponent(JSON.stringify(vars));
     const url = `${API_BASE_URL}/txn?fnc=runLib;opic=${apicode};csn=${workspace};rc=${servicecode};vars=${encodeVars}`;
     const res = await axios.get(url);
-    console.log(res.data);
     return res.data;
   } catch (err) {
     throw err;
@@ -58,7 +57,7 @@ export const getHSCode = async (hsc?: string | undefined) => {
     const encodeVars = encodeURIComponent(JSON.stringify(vars));
     const url = `${API_BASE_URL}/txn?fnc=runLib;opic=${apicode};csn=${workspace};rc=${servicecode};vars=${encodeVars}`;
     const res = await axios.get(url);
-    console.log(res.data);
+
     return res.data;
   } catch (err) {
     throw err;
@@ -70,7 +69,7 @@ export const searchHSCode = async () => {
     const servicecode = "88vBgix/qQBYQ5rlHz%2Bh5BQTkQlMyxngCZpA4%2Bdk5EM%3D";
     const url = `${API_BASE_URL}/txn?fnc=runLib;opic=${apicode};csn=${workspace};rc=${servicecode}`;
     const res = await axios.get(url);
-    console.log(res.data);
+
     return res.data;
   } catch (err) {
     throw err;
@@ -107,7 +106,7 @@ export const trackOrder = async (order_num: string) => {
       const encodeVars = encodeURIComponent(JSON.stringify(vars));
       const url = `${API_BASE_URL}/txn?fnc=runLib;opic=${apicode};csn=${workspace};rc=${servicecode};vars=${encodeVars}`;
       const res = await axios.get(url);
-      console.log(res.data);
+
       return res.data;
     } else {
       return "";
@@ -133,7 +132,7 @@ export const getnowa = async () => {
     const servicecode = "88vBgix/qQAHYhWDC8%2BLd0PR6JCnCLDD";
     const url = `${API_BASE_URL}/txn?fnc=runLib;opic=${apicode};csn=${workspace};rc=${servicecode}`;
     const res = await axios.get(url);
-    console.log(res.data);
+
     return res.data;
   } catch (error) {
     throw error;
@@ -154,7 +153,7 @@ export const postQuo = async (formDataQuo: any) => {
         : null,
       fid: "1",
     };
-    console.log(JSON.stringify(data_quo));
+
     fd.append("argl", JSON.stringify(data_quo));
 
     const servicecode = "88vBgix/qQDxtg37IwTCDtGu4lY7f0wP";
@@ -164,7 +163,6 @@ export const postQuo = async (formDataQuo: any) => {
         "Content-Type": "multipart/form-data",
       },
     });
-    console.log("Response:", response);
 
     return response.data;
   } catch (error) {
@@ -188,7 +186,7 @@ export const postQuoLog = async (formDataQuo: any) => {
         : null,
       fid: "1",
     };
-    console.log(JSON.stringify(data_quo));
+
     fd.append("argl", JSON.stringify(data_quo));
 
     const servicecode = "88vBgix/qQDxtg37IwTCDtGu4lY7f0wP";
@@ -198,7 +196,6 @@ export const postQuoLog = async (formDataQuo: any) => {
         "Content-Type": "multipart/form-data",
       },
     });
-    console.log("Response:", response);
 
     return response.data;
   } catch (error) {

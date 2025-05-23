@@ -12,7 +12,6 @@ export const useCartStore = defineStore("cart", () => {
   });
 
   const addToCart = (product: Product, cond: string) => {
-    console.log(cond);
     const existingProduct = state.cart.find(
       (item: CartItem) =>
         item.product_id === product.product_id && item.cond === cond
@@ -23,15 +22,13 @@ export const useCartStore = defineStore("cart", () => {
     } else {
       state.cart.unshift({ ...product, quantity: 1, cond });
     }
-
-    console.log(state.cart);
   };
 
   const reduceFromCart = (productId: string, cond: string) => {
     const findProduct = state.cart.find(
       (item: CartItem) => item.product_id === productId && item.cond === cond
     );
-    console.log(findProduct);
+
     if (findProduct && findProduct.quantity < 1) {
       removeFromCart(productId, cond);
     }

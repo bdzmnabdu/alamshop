@@ -6,7 +6,6 @@ const useProductsByKeyword = (
   keyword: Ref<string>,
   currentPage: Ref<number>
 ) => {
-  console.log(currentPage.value);
   const currKeyword = ref(keyword.value);
   const { isLoading, isError, error, data, refetch } = useQuery({
     queryKey: ["keyword", currKeyword.value, currentPage],

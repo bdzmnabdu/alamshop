@@ -270,10 +270,9 @@ const onSubmit = async () => {
     cart: [...form.cart],
   };
 
-  console.log(formDataQuo);
   try {
     const response = await postQuo(formDataQuo);
-    console.log("Success:", response);
+
     if (response.status === 200) {
       isSubmitted.value = true;
       cartStore.clearCart();
@@ -312,7 +311,6 @@ const onSubmit = async () => {
         "Importer's Country": formDataQuo.dtLog.negaraAsalImportir,
         Insurance: formDataQuo.dtLog.insurance === "true" ? "Yes" : "No",
       };
-      // console.log(dataLog);
 
       const message: string = [
         `Halo, saya ${formDataQuo.pemesan}. Saya pesan dengan detail sebagai berikut:`,

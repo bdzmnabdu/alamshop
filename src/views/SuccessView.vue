@@ -28,7 +28,7 @@ onBeforeUnmount(() => {
       <RouterLink
         to="/"
         class="text-white bg-orange-500 hover:bg-orange-300 rounded-xl px-3 py-2 mt-4 mb-20"
-        >Shop Again</RouterLink
+        >Back to Home</RouterLink
       >
     </div>
   </section>

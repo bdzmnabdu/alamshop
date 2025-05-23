@@ -109,7 +109,6 @@ const { nowa } = useNoWA();
 
 const searcHSC = (event: any) => {
   srcVal.value = event.target.value;
-  console.log("Search Query:", srcVal.value);
 };
 
 const handleChangeEksp = () => {
@@ -207,10 +206,9 @@ const onSubmit = async () => {
     ...dataLog,
   };
 
-  // console.log(formDataLog);
   try {
     const response = await postQuoLog(formDataLog);
-    console.log("Success:", response);
+
     if (response.status === 200) {
       router.push("/checkout/success");
 

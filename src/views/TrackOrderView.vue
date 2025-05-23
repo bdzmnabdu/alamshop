@@ -42,7 +42,6 @@ watch(data, (newData) => {
         );
       }
     );
-    console.log(validLogs);
     nodes.splice(0, nodes.length, ...validLogs);
   }
 });

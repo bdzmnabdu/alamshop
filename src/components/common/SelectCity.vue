@@ -40,7 +40,6 @@ const { setFieldValue, values } = useForm({
 function handleInput(event: InputEvent): void {
   const target = event.target as HTMLInputElement;
   state.searchVal = target.value;
-  console.log("Input value changed:", state.searchVal);
 }
 </script>
 <template>

@@ -37,7 +37,6 @@ const fetchSearchResults = () => {
 
 const currentPageFn = (page: number) => {
   currentPage.value = page;
-  console.log(currentPage.value);
 };
 
 watch(

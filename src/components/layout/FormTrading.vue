@@ -81,7 +81,6 @@ const { pack } = usePack();
 
 const searcHSC = (event: any) => {
   srcVal.value = event.target.value;
-  console.log("Search Query:", srcVal.value);
 };
 
 const handleChange = () => {

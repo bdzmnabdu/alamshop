@@ -22,7 +22,6 @@ onMounted(() => {
 const cartStore = useCartStore();
 
 const handleSearch = () => {
-  // console.log(query.value);
   if (query.value) {
     router.push({
       path: "/search",

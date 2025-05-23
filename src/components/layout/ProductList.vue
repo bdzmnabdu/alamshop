@@ -20,7 +20,7 @@ const route = useRoute();
 
 const currentPage = ref(1);
 const catId = computed(() => route.params.catId as string | undefined);
-console.log(catId.value);
+
 const waterType = computed(() => {
   const queryValue = route.query.waterType as string | string[];
   return Array.isArray(queryValue)

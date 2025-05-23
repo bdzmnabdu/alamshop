@@ -54,7 +54,6 @@ const handleDeleteCart = (productId: string, cond: string) => {
     <SheetTrigger asChild>
       <slot name="navcart"></slot>
       <slot name="prdcart"></slot>
-      <!-- <slot name="prdcart" v-if="selectedOption"></slot> -->
     </SheetTrigger>
 
     <SheetContent :side="sideSheet" class="h-[500px] md:h-full p-0">

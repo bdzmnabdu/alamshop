@@ -31,7 +31,6 @@ defineEmits(["update:selectVal"]);
 const state = reactive({
   searchVal: "",
 });
-console.log(state.searchVal);
 
 const { setFieldValue, values } = useForm({
   validationSchema: props.formSchema,
@@ -40,7 +39,6 @@ const { setFieldValue, values } = useForm({
 function handleInput(event: InputEvent): void {
   const target = event.target as HTMLInputElement;
   state.searchVal = target.value;
-  console.log("Input value changed:", state.searchVal);
 }
 </script>
 <template>
