@@ -13,9 +13,6 @@ export default defineConfig({
   },
   server: {
     port: 3845,
-    proxy: {
-      "/txn": "https://alams.gcgoptima.id",
-    },
   },
   resolve: {
     alias: {
