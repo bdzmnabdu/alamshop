@@ -11,7 +11,6 @@ const optionVal = computed({
   get: () => props.selectedOption,
   set: (value) => {
     emit("update:selectedOption", value);
-    console.log(value);
   },
 });
 

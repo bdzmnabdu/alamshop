@@ -972,7 +972,7 @@ const onSubmit = async () => {
               </div>
             </div>
             <Button type="submit" class="h-11 text-base md:text-sm">
-              <p>Place an Order</p>
+              <p>Place Order</p>
             </Button>
           </form>
         </div>

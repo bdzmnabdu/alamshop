@@ -94,7 +94,7 @@ const form = reactive<{
     namaImportir: "",
     alamatImportir: "",
     negaraAsalImportir: "",
-    insurance: "false",
+    insurance: "",
   },
 });
 const isCheckedEksportir = ref(false);
@@ -975,7 +975,7 @@ const onSubmit = async () => {
                 </div>
               </div>
               <Button type="submit" class="h-11 text-base md:text-sm">
-                Place and Order
+                Place Order
               </Button>
             </form>
           </div>

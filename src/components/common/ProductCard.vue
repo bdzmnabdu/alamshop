@@ -137,13 +137,19 @@ const handleAddToCart = () => {
                   :cart-store="cartStore"
                 >
                   <template #prdcart>
-                    <div
+                    <button
+                      :disabled="selectedOption === ''"
                       size="icon"
                       @click.prevent="handleAddToCart"
-                      class="w-full rounded-xl text-sm bg-orange-500 hover:bg-orange-200 text-white hover:text-orange-900 py-2 px-3 cursor-pointer text-center"
+                      class="w-full rounded-xl text-sm py-2 px-3 cursor-pointer text-center"
+                      :class="
+                        selectedOption
+                          ? 'bg-orange-500 hover:bg-orange-200 text-white hover:text-orange-900'
+                          : 'bg-slate-200 text-slate-400 cursor-not-allowed'
+                      "
                     >
                       Add to cart
-                    </div>
+                    </button>
                   </template>
                 </Cart>
               </div>
