@@ -214,7 +214,7 @@ const onSubmit = async () => {
     if (response.status === 200) {
       router.push("/checkout/success");
 
-      const phoneNumber: string = nowa.value.nowa ?? "628983224705"; // Nomor tujuan WhatsApp
+      const phoneNumber: string = nowa.value.nowa; // Nomor tujuan WhatsApp
 
       const message: string = [
         `Halo, saya ${formDataLog.pengirim}. Saya pesan layanan logistik dengan detail sebagai berikut:`,
@@ -249,7 +249,7 @@ const onSubmit = async () => {
         `Importer Name: ${formDataLog.namaImportir}`,
         `Importer's City : ${formDataLog.alamatImportir}`,
         `Importer's Country : ${formDataLog.negaraAsalImportir}`,
-        `Insurance: ${formDataLog.insurance ? "Yes" : "No"}`,
+        `Insurance: ${formDataLog.insurance === "true" ? "Yes" : "No"}`,
       ].join("\n");
       const waUrl: string = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
         message

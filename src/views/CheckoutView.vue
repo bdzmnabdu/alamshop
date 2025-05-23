@@ -141,7 +141,7 @@ const form = reactive<{
     namaImportir: "",
     alamatImportir: "",
     negaraAsalImportir: "",
-    insurance: "false",
+    insurance: "",
   },
   cart: [],
 });
@@ -278,7 +278,7 @@ const onSubmit = async () => {
       isSubmitted.value = true;
       cartStore.clearCart();
       router.push("/checkout/success");
-      const phoneNumber: string = nowa.value.nowa ?? "628983224705"; // Nomor tujuan WhatsApp
+      const phoneNumber: string = nowa.value.nowa; // Nomor tujuan WhatsApp
 
       const dataLog: { [key: string]: string | undefined } = {
         "Expedition Service": formDataQuo.dtLog.ekspedisi
@@ -310,7 +310,7 @@ const onSubmit = async () => {
         "Importer Name": formDataQuo.dtLog.namaImportir,
         "Importer's City": formDataQuo.dtLog.alamatImportir,
         "Importer's Country": formDataQuo.dtLog.negaraAsalImportir,
-        Insurance: formDataQuo.dtLog.insurance ? "Yes" : "No",
+        Insurance: formDataQuo.dtLog.insurance === "true" ? "Yes" : "No",
       };
       // console.log(dataLog);
 
