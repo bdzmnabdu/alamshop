@@ -24,6 +24,7 @@ interface ActionLog {
 
 const ordernum = ref("");
 const nodes = reactive<ActionLog[]>([]);
+const details = reactive<{ key: string; value: string }[]>([]);
 const query = ref<string>("");
 
 const { isLoading, data, refetch } = useTrackOrder(ordernum);
@@ -43,6 +44,20 @@ watch(data, (newData) => {
       }
     );
     nodes.splice(0, nodes.length, ...validLogs);
+    details.push({ key: "Origin", value: data.value?.data?.origin_code });
+    details.push({
+      key: "Destination",
+      value: data.value?.data?.destination_code,
+    });
+    details.push({ key: "Shipper", value: data.value?.data?.shipper });
+    details.push({ key: "Receiver", value: data.value?.data?.receiver });
+    details.push({ key: "PKG", value: data.value?.data?.pkg });
+    details.push({
+      key: "Departure Date",
+      value: data.value?.data?.flight_date,
+    });
+    details.push({ key: "Flight Time", value: data.value?.data?.flight_time });
+    details.push({ key: "Flight No", value: data.value?.data?.flight_no });
   }
 });
 
@@ -124,10 +139,20 @@ const onSubmit = () => {
         class="mt-5 rounded-xl"
       >
         <div class="w-full">
-          <div id="trk-hdr" class="mb-5">
+          <div id="trk-hdr" class="mb-2">
             <h1 class="text-2xl font-bold mb-2">Order Tracking</h1>
             <h1>Order ID: {{ ordernum }}</h1>
           </div>
+        </div>
+        <div
+          class="border border-slate-200 rounded-2xl w-full bg-white p-3 mb-3"
+        >
+          <ul class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <li v-for="(item, index) in details" :key="index">
+              <p class="text-gray-500 text-sm">{{ item.key }}</p>
+              <p class="text-black font-medium">{{ item.value }}</p>
+            </li>
+          </ul>
         </div>
         <div id="trck" class="bg-slate-50 rounded-xl">
           <div class="max-w-4xl 2xl:max-w-full mx-auto 2xl:mx-0 p-6">
