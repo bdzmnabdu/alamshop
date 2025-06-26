@@ -44,6 +44,7 @@ watch(data, (newData) => {
       }
     );
     nodes.splice(0, nodes.length, ...validLogs);
+    details.splice(0);
     details.push({ key: "Origin", value: data.value?.data?.origin_code });
     details.push({
       key: "Destination",
