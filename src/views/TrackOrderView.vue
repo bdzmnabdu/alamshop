@@ -148,7 +148,7 @@ const onSubmit = () => {
         <div
           class="border border-slate-200 rounded-2xl w-full bg-white p-3 mb-3"
         >
-          <ul class="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <ul class="grid grid-cols-2 md:grid-cols-4 gap-4">
             <li v-for="(item, index) in details" :key="index">
               <p class="text-gray-500 text-sm">{{ item.key }}</p>
               <p class="text-black font-medium">{{ item.value }}</p>
