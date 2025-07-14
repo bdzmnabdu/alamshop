@@ -174,12 +174,24 @@ const onSubmit = () => {
                         class="absolute w-1 bg-gray-300 h-[70px] left-2 top-0 z-0"
                       ></div>
                       <div
-                        class="relative w-5 h-5 flex items-center justify-center rounded-full border-4 z-10 border-green-500 bg-green-500 text-white"
-                      ></div>
+                        class="relative w-5 h-5 flex items-center justify-center rounded-full border-4 z-10 text-white"
+                        :class="
+                          index == nodes.length - 1
+                            ? 'border-green-500 bg-green-500'
+                            : 'border-gray-300 bg-gray-300'
+                        "
+                      >
+                        <span
+                          v-if="index === nodes.length - 1"
+                          class="absolute inline-flex h-5 w-5 rounded-full bg-green-400 opacity-75 animate-ping"
+                        ></span>
+                      </div>
                     </div>
 
                     <div>
-                      <p class="font-medium text-gray-700">{{ step.action }}</p>
+                      <p class="font-medium text-gray-700">
+                        {{ step.remarks }}
+                      </p>
                       <p class="text-sm text-gray-500">
                         {{ step.date }}, {{ step.time }}
                       </p>
