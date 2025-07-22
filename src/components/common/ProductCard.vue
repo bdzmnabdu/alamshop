@@ -58,12 +58,17 @@ const handleAddToCart = () => {
           <div
             class="h-40 2xl:h-50 object-cover overflow-clip bg-white rounded-2xl hover:border-2 hover:border-slate-200 w-full flex items-center justify-center"
           >
-            <img
+            <div
               v-if="product?.image_url"
-              :src="product?.image_url"
-              alt=""
-              class="w-40 h-40 2xl:w-50 2xl:h-50 object-cover"
-            />
+              class="w-full aspect-[4/3] bg-white rounded-2xl overflow-hidden flex items-center justify-center"
+            >
+              <img
+                v-if="product?.image_url"
+                :src="product?.image_url"
+                alt=""
+                class="w-full h-full object-contain p-1"
+              />
+            </div>
             <div
               v-else
               class="w-full h-[150px] flex justify-center items-center"
@@ -91,12 +96,17 @@ const handleAddToCart = () => {
           <div
             class="h-60 2xl:h-70 object-cover overflow-clip bg-white rounded-2xl w-full flex items-center justify-center"
           >
-            <img
+            <div
               v-if="product?.image_url"
-              :src="product?.image_url"
-              alt=""
-              class="w-60 h-60 2xl:w-70 2xl:h-70 object-cover"
-            />
+              class="w-full aspect-[4/3] bg-white rounded-2xl overflow-hidden flex items-center justify-center"
+            >
+              <img
+                v-if="product?.image_url"
+                :src="product?.image_url"
+                alt=""
+                class="w-full h-full object-contain"
+              />
+            </div>
             <div
               v-else
               class="w-full h-[150px] flex justify-center items-center"
